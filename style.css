@@ -71,7 +71,8 @@ body {
 /* 轮播图容器样式 */
 .carousel-container {
     position: relative;
-    width: 1150px;
+    width: 100%;
+    max-width: 1150px;
     height: 500px;
     overflow: hidden;
     margin: 0 auto;
@@ -166,6 +167,12 @@ body {
 .announcement-tabs {
     display: flex;
     gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.announcement-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .tab {
@@ -174,6 +181,7 @@ body {
     border-radius: 16px;
     font-size: 14px;
     transition: all 0.3s;
+    white-space: nowrap;
 }
 
 .tab.active {
@@ -489,6 +497,10 @@ body {
         margin-right: 15px;
     }
     
+    .carousel-container {
+        height: 400px;
+    }
+    
     .carousel-content {
         bottom: 30px;
         left: 30px;
@@ -515,9 +527,22 @@ body {
     .certificates-grid {
         grid-template-columns: 1fr;
     }
+    
+    .announcement-tabs {
+        gap: 10px;
+    }
+    
+    .tab {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 480px) {
+    .carousel-container {
+        height: 300px;
+    }
+    
     .carousel-content {
         bottom: 20px;
         left: 20px;
@@ -557,5 +582,14 @@ body {
     
     .footer-links ul li {
         margin: 0 10px;
+    }
+    
+    .announcement-list a {
+        font-size: 13px;
+    }
+    
+    .announcement-list .date {
+        font-size: 11px;
+        margin-left: 10px;
     }
 }
