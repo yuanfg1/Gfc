@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商品详情</title>
+    <title>一级纯菜籽油 - 商品详情</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="product-detail.css">
 </head>
@@ -30,17 +30,21 @@
             <a href="./index.html" class="back-link">← 返回商品列表</a>
             <div class="product-detail-content">
                 <div class="product-detail-image">
-                    <img id="productImage" src="" alt="商品图片">
+                    <img id="productImage" src="轮播图库/3.jpg" alt="一级纯菜籽油">
                 </div>
                 <div class="product-detail-info">
-                    <h1 id="productName"></h1>
-                    <div class="price" id="productPrice"></div>
-                    <div class="description" id="productDescription"></div>
+                    <h1 id="productName">一级纯菜籽油</h1>
+                    <div class="price" id="productPrice">¥99.00</div>
+                    <div class="description" id="productDescription">这是一款高品质的一级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。</div>
                     
                     <div class="features">
                         <h3>商品特点</h3>
                         <ul id="featuresList">
-                            
+                            <li>非转基因，安全健康</li>
+                            <li>物理压榨，保留原香</li>
+                            <li>烟点高，适合多种烹饪方式</li>
+                            <li>富含维生素E，营养丰富</li>
+                            <li>严格质检，品质保证</li>
                         </ul>
                     </div>
                     
@@ -79,53 +83,16 @@
         </div>
     </footer>
 
-    <script type="module">
-        // 导入商品数据
-        import { products } from './pro.js';
-
-        // 获取URL参数
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    <script>
+        // 模拟添加到购物车
+        function addToCart() {
+            alert('商品已添加到购物车！');
         }
-
-        // 渲染商品详情
-        function renderProductDetail() {
-            // 从URL获取商品ID
-            const productId = parseInt(getUrlParameter('id'));
-            
-            // 查找对应的商品
-            const product = products.find(p => p.id === productId);
-            
-            if (product) {
-                // 设置商品信息
-                document.getElementById('productName').textContent = product.name;
-                document.getElementById('productPrice').textContent = product.price;
-                document.getElementById('productDescription').textContent = product.description;
-                document.getElementById('productImage').src = product.image;
-                
-                // 渲染商品特点
-                const featuresList = document.getElementById('featuresList');
-                featuresList.innerHTML = '';
-                
-                product.features.forEach(feature => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = feature;
-                    featuresList.appendChild(listItem);
-                });
-            } else {
-                // 如果未找到商品，显示提示信息
-                document.getElementById('productName').textContent = '商品不存在';
-                document.getElementById('productPrice').textContent = '';
-                document.getElementById('productDescription').textContent = '抱歉，未找到该商品的详细信息。';
-                document.getElementById('productImage').src = '商品图库/default.jpg';
-            }
+        
+        // 模拟加入收藏
+        function addToWishlist() {
+            alert('商品已加入收藏！');
         }
-
-        // 页面加载时渲染商品详情
-        document.addEventListener('DOMContentLoaded', renderProductDetail);
     </script>
 </body>
 </html>

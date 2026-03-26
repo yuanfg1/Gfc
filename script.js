@@ -3,26 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const slides = Array.from(track.children);
     const indicatorsContainer = document.getElementById('indicators');
     
-    let currentIndex = 1; // 从1开始，因为0位置是克隆的最后一张
+    let currentIndex = 0;
     const slideCount = slides.length;
     let autoPlayInterval;
     let startX = 0;
     let currentX = 0;
     let isDragging = false;
     let autoPlayDelay;
-    let isTransitioning = false;
 
-    // 克隆首尾幻灯片
-    const firstClone = slides[0].cloneNode(true);
-    const lastClone = slides[slideCount - 1].cloneNode(true);
     
-    // 添加克隆的幻灯片
-    track.appendChild(firstClone);
-    track.insertBefore(lastClone, slides[0]);
-    
-    // 更新幻灯片数组
-    const allSlides = Array.from(track.children);
-    const totalSlides = allSlides.length;
 
     // 初始化指示器
     slides.forEach((_, index) => {
@@ -30,8 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         indicator.classList.add('indicator');
         if (index === 0) indicator.classList.add('active');
         indicator.addEventListener('click', () => {
-            if (isTransitioning) return;
-            goToSlide(index + 1, true); // 添加第二个参数，表示是通过指示器点击
+            goToSlide(index);
             resetAutoPlay();
         });
         indicatorsContainer.appendChild(indicator);
@@ -40,19 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const indicators = Array.from(indicatorsContainer.children);
 
     // 更新轮播图位置
-    function updateCarousel(transition = true) {
-        if (transition) {
-            track.style.transition = 'transform 0.5s ease-in-out';
-        } else {
-            track.style.transition = 'none';
-        }
-        
+    function updateCarousel() {
         const amountToMove = -currentIndex * 100;
         track.style.transform = `translateX(${amountToMove}%)`;
         
         // 更新指示器状态
         indicators.forEach((indicator, index) => {
-            if (index === currentIndex - 1) { // -1 因为有克隆的第一张在前面
+            if (index === currentIndex) {
                 indicator.classList.add('active');
             } else {
                 indicator.classList.remove('active');
@@ -61,26 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 切换到指定幻灯片
-    function goToSlide(index, isIndicatorClick = false) {
-        if (isTransitioning) return;
-        isTransitioning = true;
-        
+    function goToSlide(index) {
         currentIndex = index;
+        if (currentIndex < 0) {
+            currentIndex = slideCount - 1;
+        } else if (currentIndex >= slideCount) {
+            currentIndex = 0;
+        }
         updateCarousel();
-        
-        // 检查是否到达克隆的幻灯片
-        setTimeout(() => {
-            if (currentIndex === 0) {
-                // 到达克隆的最后一张，跳转到真正的最后一张
-                currentIndex = slideCount;
-                updateCarousel(false);
-            } else if (currentIndex === totalSlides - 1) {
-                // 到达克隆的第一张，跳转到真正的第一张
-                currentIndex = 1;
-                updateCarousel(false);
-            }
-            isTransitioning = false;
-        }, 500); // 等待过渡完成
     }
 
     // 下一张
@@ -98,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 开始拖动
     function startDrag(e) {
-        if (isTransitioning) return;
         isDragging = true;
         startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
         track.style.transition = 'none';
@@ -110,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isDragging) return;
         currentX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
         const diff = currentX - startX;
-        const slideWidth = allSlides[0].offsetWidth;
+        const slideWidth = slides[0].offsetWidth;
         const percentageDiff = (diff / slideWidth) * 100;
         const moveAmount = -currentIndex * 100 + percentageDiff;
         track.style.transform = `translateX(${moveAmount}%)`;
@@ -123,9 +92,9 @@ document.addEventListener('DOMContentLoaded', function() {
         track.style.transition = 'transform 0.5s ease-in-out';
         
         const diff = currentX - startX;
-        const slideWidth = allSlides[0].offsetWidth;
+        const slideWidth = slides[0].offsetWidth;
         
-        // 如果拖动距离超过1/5幻灯片宽度，则切换到下一张/上一张
+        // 如果拖动距离超过1/3幻灯片宽度，则切换到下一张/上一张
         if (Math.abs(diff) > slideWidth / 5) {
             if (diff > 0) {
                 prevSlide();
@@ -136,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // 否则回到原位置
             updateCarousel();
         }
-        
         // 延迟重启自动播放，确保过渡完成
         clearTimeout(autoPlayDelay);
         autoPlayDelay = setTimeout(() => {
@@ -180,9 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     });
 
-    // 初始化轮播图位置
-    updateCarousel(false);
-    
     // 启动自动播放
     startAutoPlay();
 });
@@ -194,7 +159,12 @@ function renderAnnouncements(category) {
     
     if (announcements && announcements[category]) {
         const categoryAnnouncements = announcements[category];
-        categoryAnnouncements.forEach(announcement => {
+        const maxVisible = 5;
+        const visibleAnnouncements = categoryAnnouncements.slice(0, maxVisible);
+        const hiddenAnnouncements = categoryAnnouncements.slice(maxVisible);
+        
+        // 渲染可见的公告
+        visibleAnnouncements.forEach(announcement => {
             const li = document.createElement('li');
             li.innerHTML = `
                 <span class="dot">•</span>
@@ -202,6 +172,63 @@ function renderAnnouncements(category) {
                 <span class="date">${announcement.date}</span>
             `;
             listContainer.appendChild(li);
+        });
+        
+        // 如果有隐藏的公告，添加"更多"按钮
+        if (hiddenAnnouncements.length > 0) {
+            const moreLi = document.createElement('li');
+            moreLi.classList.add('more-item');
+            moreLi.innerHTML = `
+                <a href="#" class="more-link">更多公告 <span class="arrow">▼</span></a>
+            `;
+            listContainer.appendChild(moreLi);
+            
+            // 创建隐藏的公告列表
+            const hiddenList = document.createElement('ul');
+            hiddenList.classList.add('hidden-announcements');
+            hiddenList.style.display = 'none';
+            
+            hiddenAnnouncements.forEach(announcement => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="dot">•</span>
+                    <a href="#" data-title="${announcement.title}" data-date="${announcement.date}">${announcement.title}</a>
+                    <span class="date">${announcement.date}</span>
+                `;
+                hiddenList.appendChild(li);
+            });
+            
+            listContainer.appendChild(hiddenList);
+            
+            // 添加点击事件
+            const moreLink = moreLi.querySelector('.more-link');
+            moreLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const arrow = this.querySelector('.arrow');
+                if (hiddenList.style.display === 'none') {
+                    hiddenList.style.display = 'block';
+                    arrow.textContent = '▲';
+                    this.textContent = '收起公告 ';
+                    this.appendChild(arrow);
+                } else {
+                    hiddenList.style.display = 'none';
+                    arrow.textContent = '▼';
+                    this.textContent = '更多公告 ';
+                    this.appendChild(arrow);
+                }
+            });
+        }
+        
+        // 为所有公告链接添加点击事件
+        const announcementLinks = listContainer.querySelectorAll('a[data-title]');
+        announcementLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const title = this.getAttribute('data-title');
+                const date = this.getAttribute('data-date');
+                const encodedTitle = encodeURIComponent(title);
+                window.location.href = 'announcement-detail.html?title=' + encodedTitle + '&date=' + date;
+            });
         });
     }
 }
@@ -219,18 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const category = this.getAttribute('data-category');
             renderAnnouncements(category);
-        });
-    });
-    
-    // 公告点击事件
-    const announcementLinks = document.querySelectorAll('.announcement-list a');
-    announcementLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const title = this.getAttribute('data-title');
-            const date = this.getAttribute('data-date');
-            const encodedTitle = encodeURIComponent(title);
-            window.location.href = 'announcement-detail.html?title=' + encodedTitle + '&date=' + date;
         });
     });
 });
