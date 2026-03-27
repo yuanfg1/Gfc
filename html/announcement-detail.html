@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告详情</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/announcement-detail.css">
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo"><img src="../logo.png" alt="塞北仙翁" height="50"></div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="../index.html#home">首页</a></li>
+                    <li><a href="../index.html#about">关于我们</a></li>
+                    <li><a href="../index.html#products">商品展示</a></li>
+                    <li><a href="../index.html#certificates">证书展示</a></li>
+                    <li><a href="../index.html#contact">联系我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 公告详情 -->
+    <section class="announcement-detail">
+        <div class="container">
+            <div class="announcement-detail-content">
+                <h1 class="announcement-detail-title" id="detailTitle">公告标题</h1>
+                <div class="announcement-detail-meta">
+                    <span id="detailDate"></span>
+                    <span>来源：塞北仙翁</span>
+                </div>
+                <div class="announcement-detail-body" id="detailContent">
+                </div>
+                <div class="announcement-nav">
+                    <div class="prev-announcement" id="prevAnnouncement">
+                        <span>上一条：</span>
+                        <a href="#" id="prevLink"></a>
+                    </div>
+                    <div class="next-announcement" id="nextAnnouncement">
+                        <span>下一条：</span>
+                        <a href="#" id="nextLink"></a>
+                    </div>
+                </div>
+                <a href="../index.html#announcement" class="back-link">← 返回公告列表</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">塞北仙翁</div>
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="../index.html#home">首页</a></li>
+                        <li><a href="../index.html#about">关于我们</a></li>
+                        <li><a href="../index.html#products">商品展示</a></li>
+                        <li><a href="../index.html#certificates">证书展示</a></li>
+                        <li><a href="../index.html#contact">联系我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2026 塞北仙翁. 保留所有权利.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引入公告数据 -->
+    <script src="../js/announcement-data.js"></script>
+    <script src="../js/announcement-detail.js"></script>
+</body>
+</html>

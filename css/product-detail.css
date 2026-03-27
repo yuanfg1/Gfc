@@ -1,0 +1,211 @@
+/* 商品信息样式 */
+.product-detail {
+    padding: 80px 0 40px;
+    background-color: #f9f9f9;
+}
+
+.product-detail-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-detail-image {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* 商品详情页轮播图样式 */
+.product-detail-image .carousel-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.product-detail-image .carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+
+.product-detail-image .carousel-slide {
+    flex: 0 0 100%;
+    height: 100%;
+}
+
+.product-detail-image .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-detail-image .carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.product-detail-image .carousel-indicators .indicator {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.product-detail-image .carousel-indicators .indicator.active {
+    background-color: #fff;
+}
+
+.product-detail-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.product-detail-info h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.product-detail-info .price {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e74c3c;
+    margin-bottom: 20px;
+}
+
+.product-detail-info .description {
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.product-detail-info .features {
+    margin-bottom: 30px;
+}
+
+.product-detail-info .features h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.product-detail-info .features ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.product-detail-info .features li {
+    padding: 8px 0;
+    color: #666;
+    border-bottom: 1px solid #eee;
+}
+
+.product-detail-info .features li:before {
+    content: "✓";
+    color: #0066cc;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.product-detail-info .quantity {
+    margin-bottom: 20px;
+}
+
+.product-detail-info .quantity label {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: 500;
+}
+
+.product-detail-info .quantity input {
+    width: 80px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.product-detail-info .actions {
+    display: flex;
+    gap: 15px;
+}
+
+.product-detail-info .btn-primary {
+    background-color: #0066cc;
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.product-detail-info .btn-primary:hover {
+    background-color: #0052a3;
+}
+
+.product-detail-info .btn-secondary {
+    background-color: #fff;
+    color: #0066cc;
+    padding: 12px 30px;
+    text-decoration: none;
+    border: 2px solid #0066cc;
+    border-radius: 4px;
+    transition: all 0.3s;
+    font-size: 16px;
+}
+
+.product-detail-info .btn-secondary:hover {
+    background-color: #0066cc;
+    color: white;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .product-detail-content {
+        padding: 20px;
+    }
+
+    .product-detail-image img {
+        height: 300px;
+    }
+
+    .product-detail-info h1 {
+        font-size: 24px;
+    }
+
+    .product-detail-info .price {
+        font-size: 24px;
+    }
+
+    .product-detail-info .actions {
+        flex-direction: column;
+    }
+}
