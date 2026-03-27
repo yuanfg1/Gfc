@@ -262,6 +262,41 @@ function renderAnnouncements(category) {
     }
 }
 
+// 直接打开检测报告PDF
+function openCertificatePDF(category) {
+    // 获取对应类别的检测报告PDF
+    const certificatePDFs = getCertificatePDFs(category);
+    
+    if (certificatePDFs.length > 0) {
+        // 直接打开第一个PDF文件
+        const pdf = certificatePDFs[0];
+        window.open(`./img/检测报告/${category}/${pdf.file}`, '_blank');
+    } else {
+        alert('暂无检测报告PDF');
+    }
+}
+
+// 获取检测报告PDF
+function getCertificatePDFs(category) {
+    // 检测报告PDF数据
+    const certificateData = {
+        '大果红花': [
+            { name: '大果红花茶油检测报告', file: '大果红花茶油-筠连县高峰商贸有限公司.pdf' }
+        ],
+        '山茶油': [
+            { name: '山茶油检测报告', file: '山茶油-筠连县高峰商贸有限公司.pdf' }
+        ],
+        '一级菜籽油': [
+            { name: '一级菜籽油检测报告', file: '最新  高峰村 商贸有限公司 专业检测报告.pdf' }
+        ],
+        '二级菜籽油': [
+            { name: '二级菜籽油检测报告', file: '最新  高峰村 商贸有限公司 专业检测报告.pdf' }
+        ]
+    };
+    
+    return certificateData[category] || [];
+}
+
 // 初始化公告
 document.addEventListener('DOMContentLoaded', function() {
     renderAnnouncements('press');

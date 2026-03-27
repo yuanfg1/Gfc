@@ -572,3 +572,14 @@ body {
     margin-left: 5px;
     font-size: 12px;
 }
+
+/* 证书项样式 */
+.certificate-item {
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.certificate-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
