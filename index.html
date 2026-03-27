@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>塞北仙翁</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
@@ -113,7 +114,20 @@
                     <p></p>
                 </div>
                 <div class="about-image">
-                    <img src="./img/轮播图库/3.jpg" alt="关于我们">
+                    <div class="about-carousel-container">
+                        <div class="about-carousel-track">
+                            <div class="about-carousel-slide">
+                                <img src="./img/关于图库/1.jpg" alt="关于我们1">
+                            </div>
+                            <div class="about-carousel-slide">
+                                <img src="./img/关于图库/2.jpg" alt="关于我们2">
+                            </div>
+                            <div class="about-carousel-slide">
+                                <img src="./img/关于图库/3.jpg" alt="关于我们3">
+                            </div>
+                        </div>
+                        <div class="about-carousel-indicators"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,35 +137,8 @@
     <section id="products" class="products">
         <div class="container">
             <h2 class="section-title">商品展示</h2>
-            <div class="products-grid">
-                <div class="product-item">
-                    <img src="./img/商品图库/1.jpg" alt="大果红花茶油">
-                    <h3>大果红花茶油</h3>
-                    <p>高品质商品，满足您的需求。</p>
-                    <div class="price">¥299.00</div>
-                    <a href="./html/product-detail.html?id=1" class="btn">查看详情</a>
-                </div>
-                <div class="product-item">
-                    <img src="./img/商品图库/2.jpg" alt="山茶油">
-                    <h3>山茶油</h3>
-                    <p>高品质商品，满足您的需求。</p>
-                    <div class="price">¥199.00</div>
-                    <a href="./html/product-detail.html?id=2" class="btn">查看详情</a>
-                </div>
-                <div class="product-item">
-                    <img src="./img/商品图库/3.jpg" alt="一级纯菜籽油">
-                    <h3>一级纯菜籽油</h3>
-                    <p>高品质商品，满足您的需求。</p>
-                    <div class="price">¥99.00</div>
-                    <a href="./html/product-detail.html?id=3" class="btn">查看详情</a>
-                </div>
-                <div class="product-item">
-                    <img src="./img/商品图库/4.jpg" alt="二级纯菜籽油">
-                    <h3>二级纯菜籽油</h3>
-                    <p>高品质商品，满足您的需求。</p>
-                    <div class="price">¥79.00</div>
-                    <a href="./html/product-detail.html?id=4" class="btn">查看详情</a>
-                </div>
+            <div class="products-grid" id="productsGrid">
+                <!-- 商品将通过JavaScript动态生成 -->
             </div>
         </div>
     </section>
