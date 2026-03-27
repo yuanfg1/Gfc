@@ -3,8 +3,8 @@ const products = [
     {
         id: 1,
         name: "大果红花茶油",
-        price: "¥299.00",
-        images: ["轮播图库/1.jpg", "商品图库/1.jpg", "轮播图库/3.jpg"],
+        price: "¥128.00",
+        images: ["../img/商品图库/1.jpg", "../img/商品图库/2.jpg", "../img/商品图库/3.jpg"],
         description: "这是一款高品质的大果红花茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "优质材料，耐用性强",
@@ -17,8 +17,8 @@ const products = [
     {
         id: 2,
         name: "山茶油",
-        price: "¥199.00",
-        images: ["轮播图库/2.jpg", "商品图库/2.jpg", "轮播图库/4.jpg"],
+        price: "¥88.00",
+        images: ["../img/轮播图库/2.jpg", "../img/商品图库/2.jpg", "../img/轮播图库/4.jpg"],
         description: "这是一款高品质的山茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "天然有机，健康无害",
@@ -31,8 +31,8 @@ const products = [
     {
         id: 3,
         name: "一级纯菜籽油",
-        price: "¥99.00",
-        images: ["轮播图库/3.jpg", "商品图库/3.jpg", "轮播图库/5.jpg"],
+        price: "¥128.00",
+        images: ["../img/轮播图库/3.jpg", "../img/商品图库/3.jpg", "../img/轮播图库/5.jpg"],
         description: "这是一款高品质的一级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "非转基因，安全健康",
@@ -46,7 +46,7 @@ const products = [
         id: 4,
         name: "二级纯菜籽油",
         price: "¥79.00",
-        images: ["轮播图库/4.jpg", "商品图库/4.jpg", "轮播图库/6.jpg"],
+        images: ["../img/轮播图库/4.jpg", "../img/商品图库/4.jpg", "../img/轮播图库/6.jpg"],
         description: "这是一款高品质的二级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "经济实惠，性价比高",
@@ -101,7 +101,7 @@ function renderProductDetail() {
         // 显示默认图片
         const track = document.getElementById('productTrack');
         const indicators = document.getElementById('productIndicators');
-        track.innerHTML = '<div class="carousel-slide"><img src="商品图库/default.jpg" alt="默认图片"></div>';
+        track.innerHTML = '<div class="carousel-slide"><img src="../img/商品图库/default.jpg" alt="默认图片"></div>';
         indicators.innerHTML = '<div class="indicator active"></div>';
     }
 }
