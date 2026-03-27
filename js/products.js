@@ -42,19 +42,19 @@ function loadProducts() {
         let imagePath;
         switch (product.folder) {
             case '大果红花':
-                imagePath = 'img/商品图库/大果红花/1.jpg';
+                imagePath = './img/商品图库/大果红花/1.jpg';
                 break;
             case '山茶油':
-                imagePath = 'img/商品图库/山茶油/微信图片_20260327111307_26_24.jpg';
+                imagePath = './img/商品图库/山茶油/微信图片_20260327111307_26_24.jpg';
                 break;
             case '一级菜籽油':
-                imagePath = 'img/商品图库/一级菜籽油/微信图片_20260327111315_32_24.jpg';
+                imagePath = './img/商品图库/一级菜籽油/微信图片_20260327111315_32_24.jpg';
                 break;
             case '二级菜籽油':
-                imagePath = 'img/商品图库/二级菜籽油/微信图片_20260327111301_21_24.jpg';
+                imagePath = './img/商品图库/二级菜籽油/微信图片_20260327111301_21_24.jpg';
                 break;
             default:
-                imagePath = `img/商品图库/${product.folder}/1.jpg`;
+                imagePath = `./img/商品图库/${product.folder}/1.jpg`;
         }
         
         const productItem = document.createElement('div');
