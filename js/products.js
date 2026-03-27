@@ -1,5 +1,5 @@
 // 商品数据
-const products = [
+let products = [
     {
         id: 1,
         name: "大果红花茶油",
