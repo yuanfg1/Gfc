@@ -262,6 +262,79 @@ function renderAnnouncements(category) {
     }
 }
 
+// 商品数据
+const products = [
+    {
+        id: 1,
+        name: "大果红花茶油",
+        price: "¥299.00",
+        folder: "大果红花",
+        description: "高品质商品，满足您的需求。"
+    },
+    {
+        id: 2,
+        name: "山茶油",
+        price: "¥199.00",
+        folder: "山茶油",
+        description: "高品质商品，满足您的需求。"
+    },
+    {
+        id: 3,
+        name: "一级纯菜籽油",
+        price: "¥99.00",
+        folder: "一级菜籽油",
+        description: "高品质商品，满足您的需求。"
+    },
+    {
+        id: 4,
+        name: "二级纯菜籽油",
+        price: "¥79.00",
+        folder: "二级菜籽油",
+        description: "高品质商品，满足您的需求。"
+    }
+];
+
+// 加载商品展示
+function loadProducts() {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+    
+    productsGrid.innerHTML = '';
+    
+    products.forEach(product => {
+        // 获取对应文件夹中的第一张图片
+        let imagePath;
+        switch (product.folder) {
+            case '大果红花':
+                imagePath = `./img/商品图库/${product.folder}/1.jpg`;
+                break;
+            case '山茶油':
+                imagePath = `./img/商品图库/${product.folder}/微信图片_20260327111307_26_24.jpg`;
+                break;
+            case '一级菜籽油':
+                imagePath = `./img/商品图库/${product.folder}/微信图片_20260327111315_32_24.jpg`;
+                break;
+            case '二级菜籽油':
+                imagePath = `./img/商品图库/${product.folder}/微信图片_20260327111301_21_24.jpg`;
+                break;
+            default:
+                imagePath = `./img/商品图库/${product.folder}/1.jpg`;
+        }
+        
+        const productItem = document.createElement('div');
+        productItem.classList.add('product-item');
+        productItem.innerHTML = `
+            <img src="${imagePath}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>${product.description}</p>
+            <div class="price">${product.price}</div>
+            <a href="./html/product-detail.html?id=${product.id}" class="btn">查看详情</a>
+        `;
+        
+        productsGrid.appendChild(productItem);
+    });
+}
+
 // 直接打开检测报告PDF
 function openCertificatePDF(category) {
     // 获取对应类别的检测报告PDF
@@ -297,9 +370,160 @@ function getCertificatePDFs(category) {
     return certificateData[category] || [];
 }
 
+// 初始化关于我们轮播图
+function initAboutCarousel() {
+    const container = document.querySelector('.about-carousel-container');
+    const track = document.querySelector('.about-carousel-track');
+    const slides = document.querySelectorAll('.about-carousel-slide');
+    const indicatorsContainer = document.querySelector('.about-carousel-indicators');
+    
+    if (!container || !track || !slides.length) return;
+    
+    // 创建指示器
+    slides.forEach((_, index) => {
+        const indicator = document.createElement('div');
+        indicator.classList.add('about-carousel-indicator');
+        if (index === 0) indicator.classList.add('active');
+        indicator.addEventListener('click', () => goToSlide(index));
+        indicatorsContainer.appendChild(indicator);
+    });
+    
+    const indicators = document.querySelectorAll('.about-carousel-indicator');
+    let currentSlide = 0;
+    const slideCount = slides.length;
+    let isDragging = false;
+    let startX = 0;
+    let dragDistance = 0;
+    let autoPlayInterval = null;
+    
+    // 自动播放
+    function startAutoPlay() {
+        // 确保只有一个计时器在运行
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+        }
+        autoPlayInterval = setInterval(() => {
+            goToSlide((currentSlide + 1) % slideCount);
+        }, 5000);
+    }
+    
+    // 停止自动播放
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+    }
+    
+    // 切换到指定幻灯片
+    function goToSlide(index) {
+        currentSlide = index;
+        updateCarousel();
+    }
+    
+    // 更新轮播图状态
+    function updateCarousel() {
+        const slideWidth = container.clientWidth;
+        track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+        
+        // 更新指示器状态
+        indicators.forEach((indicator, index) => {
+            if (index === currentSlide) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+    }
+    
+    // 鼠标拖动开始
+    container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        stopAutoPlay();
+    });
+    
+    // 鼠标拖动移动
+    container.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        dragDistance = e.clientX - startX;
+    });
+    
+    // 鼠标拖动结束
+    container.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const slideWidth = container.clientWidth;
+        if (Math.abs(dragDistance) > slideWidth / 3) {
+            if (dragDistance > 0) {
+                // 向右拖动，上一张
+                goToSlide((currentSlide - 1 + slideCount) % slideCount);
+            } else {
+                // 向左拖动，下一张
+                goToSlide((currentSlide + 1) % slideCount);
+            }
+        }
+        
+        dragDistance = 0;
+        startAutoPlay();
+    });
+    
+    // 鼠标离开容器
+    container.addEventListener('mouseleave', () => {
+        if (isDragging) {
+            isDragging = false;
+            dragDistance = 0;
+        }
+        // 只在没有正在进行的拖动操作时启动自动播放
+        startAutoPlay();
+    });
+    
+    // 触摸事件支持
+    container.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        stopAutoPlay();
+    });
+    
+    container.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        dragDistance = e.touches[0].clientX - startX;
+    });
+    
+    container.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const slideWidth = container.clientWidth;
+        if (Math.abs(dragDistance) > slideWidth / 3) {
+            if (dragDistance > 0) {
+                goToSlide((currentSlide - 1 + slideCount) % slideCount);
+            } else {
+                goToSlide((currentSlide + 1) % slideCount);
+            }
+        }
+        
+        dragDistance = 0;
+        startAutoPlay();
+    });
+    
+    // 窗口大小改变时更新
+    window.addEventListener('resize', updateCarousel);
+    
+    // 开始自动播放
+    startAutoPlay();
+}
+
 // 初始化公告
 document.addEventListener('DOMContentLoaded', function() {
     renderAnnouncements('press');
+    
+    // 初始化关于我们轮播图
+    initAboutCarousel();
+    
+    // 加载商品展示
+    loadProducts();
     
     // 标签页点击事件
     const tabs = document.querySelectorAll('.tab');
