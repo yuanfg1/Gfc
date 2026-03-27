@@ -3,8 +3,8 @@ const products = [
     {
         id: 1,
         name: "大果红花茶油",
-        price: "¥128.00",
-        images: ["../img/商品图库/1.jpg", "../img/商品图库/2.jpg", "../img/商品图库/3.jpg"],
+        price: "¥299.00",
+        folder: "大果红花",
         description: "这是一款高品质的大果红花茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "优质材料，耐用性强",
@@ -17,8 +17,8 @@ const products = [
     {
         id: 2,
         name: "山茶油",
-        price: "¥88.00",
-        images: ["../img/轮播图库/2.jpg", "../img/商品图库/2.jpg", "../img/轮播图库/4.jpg"],
+        price: "¥199.00",
+        folder: "山茶油",
         description: "这是一款高品质的山茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "天然有机，健康无害",
@@ -31,8 +31,8 @@ const products = [
     {
         id: 3,
         name: "一级纯菜籽油",
-        price: "¥128.00",
-        images: ["../img/轮播图库/3.jpg", "../img/商品图库/3.jpg", "../img/轮播图库/5.jpg"],
+        price: "¥99.00",
+        folder: "一级菜籽油",
         description: "这是一款高品质的一级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "非转基因，安全健康",
@@ -46,7 +46,7 @@ const products = [
         id: 4,
         name: "二级纯菜籽油",
         price: "¥79.00",
-        images: ["../img/轮播图库/4.jpg", "../img/商品图库/4.jpg", "../img/轮播图库/6.jpg"],
+        folder: "二级菜籽油",
         description: "这是一款高品质的二级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "经济实惠，性价比高",
@@ -64,6 +64,45 @@ function getUrlParameter(name) {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var results = regex.exec(location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// 获取商品文件夹中的图片
+function getProductImages(folder) {
+    // 根据文件夹名称获取对应的图片
+    const imageMap = {
+        '大果红花': [
+            '../img/商品图库/大果红花/1.jpg',
+            '../img/商品图库/大果红花/2.jpg',
+            '../img/商品图库/大果红花/3.jpg',
+            '../img/商品图库/大果红花/4.jpg',
+            '../img/商品图库/大果红花/5.jpg',
+            '../img/商品图库/大果红花/6.jpg'
+        ],
+        '山茶油': [
+            '../img/商品图库/山茶油/微信图片_20260327111307_26_24.jpg',
+            '../img/商品图库/山茶油/微信图片_20260327111308_27_24.jpg',
+            '../img/商品图库/山茶油/微信图片_20260327111310_28_24.jpg',
+            '../img/商品图库/山茶油/微信图片_20260327111311_29_24.jpg',
+            '../img/商品图库/山茶油/微信图片_20260327111312_30_24.jpg',
+            '../img/商品图库/山茶油/微信图片_20260327111314_31_24.jpg'
+        ],
+        '一级菜籽油': [
+            '../img/商品图库/一级菜籽油/微信图片_20260327111315_32_24.jpg',
+            '../img/商品图库/一级菜籽油/微信图片_20260327111317_33_24.jpg',
+            '../img/商品图库/一级菜籽油/微信图片_20260327111318_34_24.jpg',
+            '../img/商品图库/一级菜籽油/微信图片_20260327111319_35_24.jpg',
+            '../img/商品图库/一级菜籽油/微信图片_20260327111320_36_24.jpg'
+        ],
+        '二级菜籽油': [
+            '../img/商品图库/二级菜籽油/微信图片_20260327111301_21_24.jpg',
+            '../img/商品图库/二级菜籽油/微信图片_20260327111302_22_24.jpg',
+            '../img/商品图库/二级菜籽油/微信图片_20260327111303_23_24.jpg',
+            '../img/商品图库/二级菜籽油/微信图片_20260327111304_24_24.jpg',
+            '../img/商品图库/二级菜籽油/微信图片_20260327111305_25_24.jpg'
+        ]
+    };
+    
+    return imageMap[folder] || [];
 }
 
 // 渲染商品详情
@@ -90,8 +129,11 @@ function renderProductDetail() {
             featuresList.appendChild(listItem);
         });
         
+        // 获取商品图片
+        const productImages = getProductImages(product.folder);
+        
         // 初始化商品轮播图
-        initProductCarousel(product.images);
+        initProductCarousel(productImages);
     } else {
         // 如果未找到商品，显示提示信息
         document.getElementById('productName').textContent = '商品不存在';
