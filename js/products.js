@@ -43,7 +43,23 @@ function loadProducts() {
     
     products.forEach(product => {
         // 自动获取对应商品文件夹中的第一张图片
-        let imagePath = `./img/商品图库/${product.folder}/${product.image}`;
+        let imagePath;
+        switch (product.folder) {
+            case '大果红花':
+                imagePath = './img/11.jpg';
+                break;
+            case '山茶油':
+                imagePath = './img/12.jpg';
+                break;
+            case '一级菜籽油':
+                imagePath = './img/13.jpg';
+                break;
+            case '二级菜籽油':
+                imagePath = './img/14.jpg';
+                break;
+            default:
+                imagePath = './img/11.jpg';
+        }
         
         const productItem = document.createElement('div');
         productItem.classList.add('product-item');

@@ -58,23 +58,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 切换到指定幻灯片
     function goToSlide(index) {
-        currentIndex = index;
-        track.style.transition = 'transform 0.5s ease-in-out';
-        updateCarousel();
-        
-        // 当切换到克隆的幻灯片时，立即跳转到对应的真实幻灯片位置
-        if (currentIndex === 0) {
-            setTimeout(() => {
-                track.style.transition = 'none';
-                currentIndex = slideCount - 2;
-                updateCarousel();
-            }, 500);
-        } else if (currentIndex === slideCount - 1) {
+        // 处理从最后一张到第一张的特殊情况（从右侧进入）
+        if (currentIndex === slideCount - 2 && index === 1) {
+            // 先移动到克隆的第一张幻灯片
+            currentIndex = slideCount - 1;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的第一张幻灯片
             setTimeout(() => {
                 track.style.transition = 'none';
                 currentIndex = 1;
                 updateCarousel();
             }, 500);
+        }
+        // 处理从第一张到最后一张的特殊情况（从左侧进入）
+        else if (currentIndex === 1 && index === slideCount - 2) {
+            // 先移动到克隆的最后一张幻灯片
+            currentIndex = 0;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的最后一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentIndex = slideCount - 2;
+                updateCarousel();
+            }, 500);
+        }
+        // 正常切换
+        else {
+            currentIndex = index;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
         }
     }
 
@@ -272,7 +288,7 @@ function openCertificatePDF(category) {
     if (certificatePDFs.length > 0) {
         // 直接打开第一个PDF文件
         const pdf = certificatePDFs[0];
-        window.open(`./img/检测报告/${category}/${pdf.file}`, '_blank');
+        window.open(`./img/jiancebaogao/${pdf.file}`, '_blank');
     } else {
         alert('暂无检测报告PDF');
     }
@@ -289,10 +305,10 @@ function getCertificatePDFs(category) {
             { name: '山茶油检测报告', file: '山茶油-筠连县高峰商贸有限公司.pdf' }
         ],
         '一级菜籽油': [
-            { name: '一级菜籽油检测报告', file: '最新  高峰村 商贸有限公司 专业检测报告.pdf' }
+            { name: '一级菜籽油检测报告', file: '一级菜籽油最新  高峰村 商贸有限公司 专业检测报告.pdf' }
         ],
         '二级菜籽油': [
-            { name: '二级菜籽油检测报告', file: '最新  高峰村 商贸有限公司 专业检测报告.pdf' }
+            { name: '二级菜籽油检测报告', file: '二级菜籽油最新  高峰村 商贸有限公司 专业检测报告.pdf' }
         ]
     };
     
@@ -444,6 +460,51 @@ function initAboutCarousel() {
     startAutoPlay();
 }
 
+// 加载证书展示
+function loadCertificates() {
+    const certificatesGrid = document.getElementById('certificatesGrid');
+    if (!certificatesGrid) return;
+    
+    certificatesGrid.innerHTML = '';
+    
+    // 使用products数据来生成证书展示
+    if (typeof products !== 'undefined') {
+        products.forEach(product => {
+            // 自动获取对应商品文件夹中的第一张图片
+            let imagePath;
+            switch (product.folder) {
+                case '大果红花':
+                    imagePath = './img/11.jpg';
+                    break;
+                case '山茶油':
+                    imagePath = './img/12.jpg';
+                    break;
+                case '一级菜籽油':
+                    imagePath = './img/13.jpg';
+                    break;
+                case '二级菜籽油':
+                    imagePath = './img/14.jpg';
+                    break;
+                default:
+                    imagePath = './img/11.jpg';
+            }
+            
+            const certificateItem = document.createElement('div');
+            certificateItem.classList.add('certificate-item');
+            certificateItem.onclick = function() {
+                openCertificatePDF(product.folder);
+            };
+            certificateItem.innerHTML = `
+                <img src="${imagePath}" alt="${product.name}检测报告">
+                <h3>${product.name}检测报告</h3>
+                <p>点击直接查看</p>
+            `;
+            
+            certificatesGrid.appendChild(certificateItem);
+        });
+    }
+}
+
 // 初始化公告
 document.addEventListener('DOMContentLoaded', function() {
     renderAnnouncements('press');
@@ -453,6 +514,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 加载商品展示
     loadProducts();
+    
+    // 加载证书展示
+    loadCertificates();
     
     // 标签页点击事件
     const tabs = document.querySelectorAll('.tab');

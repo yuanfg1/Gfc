@@ -4,7 +4,7 @@ export const products = [
         id: 1,
         name: "大果红花茶油",
         price: "¥299.00",
-        image: "轮播图库/1.jpg",
+        image: "L/1.jpg",
         description: "这是一款高品质的大果红花茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "优质材料，耐用性强",
@@ -18,7 +18,7 @@ export const products = [
         id: 2,
         name: "山茶油",
         price: "¥199.00",
-        image: "轮播图库/2.jpg",
+        image: "L/2.jpg",
         description: "这是一款高品质的山茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "天然有机，健康无害",
@@ -32,7 +32,7 @@ export const products = [
         id: 3,
         name: "一级纯菜籽油",
         price: "¥99.00",
-        image: "轮播图库/3.jpg",
+        image: "L/3.jpg",
         description: "这是一款高品质的一级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "非转基因，安全健康",
@@ -46,7 +46,7 @@ export const products = [
         id: 4,
         name: "二级纯菜籽油",
         price: "¥79.00",
-        image: "轮播图库/4.jpg",
+        image: "L/4.jpg",
         description: "这是一款高品质的二级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
         features: [
             "经济实惠，性价比高",
