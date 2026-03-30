@@ -1,62 +1,4 @@
-// 商品数据
-let products = [
-    {
-        id: 1,
-        name: "大果红花茶油",
-        price: "¥299.00",
-        folder: "大果红花",
-        description: "这是一款高品质的大果红花茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
-        features: [
-            "优质材料，耐用性强",
-            "精湛工艺，品质保证",
-            "时尚设计，美观大方",
-            "多种规格，满足不同需求",
-            "售后服务完善，购买无忧"
-        ]
-    },
-    {
-        id: 2,
-        name: "山茶油",
-        price: "¥199.00",
-        folder: "山茶油",
-        description: "这是一款高品质的山茶油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
-        features: [
-            "天然有机，健康无害",
-            "营养丰富，口感纯正",
-            "冷榨工艺，保留营养",
-            "多种包装，方便选择",
-            "专业配送，保证新鲜"
-        ]
-    },
-    {
-        id: 3,
-        name: "一级纯菜籽油",
-        price: "¥99.00",
-        folder: "一级菜籽油",
-        description: "这是一款高品质的一级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
-        features: [
-            "非转基因，安全健康",
-            "物理压榨，保留原香",
-            "烟点高，适合多种烹饪方式",
-            "富含维生素E，营养丰富",
-            "严格质检，品质保证"
-        ]
-    },
-    {
-        id: 4,
-        name: "二级纯菜籽油",
-        price: "¥79.00",
-        folder: "二级菜籽油",
-        description: "这是一款高品质的二级纯菜籽油，采用优质材料制作，工艺精湛，设计时尚。无论是日常使用还是送礼都是不错的选择。我们注重每一个细节，确保产品质量达到最高标准。",
-        features: [
-            "经济实惠，性价比高",
-            "日常烹饪的理想选择",
-            "口感纯正，不油腻",
-            "营养丰富，有益健康",
-            "大容量包装，适合家庭使用"
-        ]
-    }
-];
+// 商品详情页逻辑
 
 // 获取URL参数
 function getUrlParameter(name) {
@@ -117,9 +59,14 @@ function renderProductDetail() {
 
 // 初始化商品轮播图
 function initProductCarousel(images) {
+    const container = document.getElementById('productCarousel');
     const track = document.getElementById('productTrack');
     const indicators = document.getElementById('productIndicators');
-    let currentIndex = 0;
+    
+    if (!container || !track || !indicators) {
+        console.error('商品轮播图DOM元素不存在');
+        return;
+    }
     
     // 清空轮播图容器
     track.innerHTML = '';
@@ -132,52 +79,291 @@ function initProductCarousel(images) {
         slide.classList.add('carousel-slide');
         slide.innerHTML = `<img src="${image}" alt="商品图片${index + 1}">`;
         track.appendChild(slide);
+    });
+    
+    const slides = document.querySelectorAll('.carousel-slide');
+    
+    // 为了实现平滑的循环播放，在轨道的开始和结束添加额外的幻灯片
+    // 在开始添加最后一张幻灯片的副本
+    if (slides.length > 0) {
+        const lastSlide = slides[slides.length - 1].cloneNode(true);
+        track.insertBefore(lastSlide, slides[0]);
         
-        // 创建指示器
+        // 在结束添加第一张幻灯片的副本
+        const firstSlide = slides[0].cloneNode(true);
+        track.appendChild(firstSlide);
+    }
+    
+    // 更新幻灯片数组和计数
+    const allSlides = Array.from(track.children);
+    let slideCount = allSlides.length;
+    let currentSlide = 1; // 从1开始，因为我们在开始添加了一张幻灯片
+    
+    // 创建指示器
+    slides.forEach((_, index) => {
         const indicator = document.createElement('div');
         indicator.classList.add('indicator');
-        if (index === 0) {
-            indicator.classList.add('active');
-        }
-        indicator.addEventListener('click', () => goToSlide(index));
+        if (index === 0) indicator.classList.add('active');
+        indicator.addEventListener('click', () => goToSlide(index + 1)); // 加1因为我们在开始添加了一张幻灯片
         indicators.appendChild(indicator);
     });
     
+    const indicatorElements = document.querySelectorAll('.indicator');
+    let isDragging = false;
+    let startX = 0;
+    let dragDistance = 0;
+    let autoPlayInterval = null;
+    
+    // 初始位置设置为第一张真实幻灯片
+    const slideWidth = 100; // 百分比宽度
+    track.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+    
     // 自动播放
-    let autoPlayInterval = setInterval(() => {
-        currentIndex = (currentIndex + 1) % images.length;
-        goToSlide(currentIndex);
-    }, 3000);
-    
-    // 鼠标悬停时暂停自动播放
-    const carousel = document.getElementById('productCarousel');
-    carousel.addEventListener('mouseenter', () => {
-        clearInterval(autoPlayInterval);
-    });
-    
-    // 鼠标离开时恢复自动播放
-    carousel.addEventListener('mouseleave', () => {
+    function startAutoPlay() {
+        // 确保只有一个计时器在运行
+        stopAutoPlay();
         autoPlayInterval = setInterval(() => {
-            currentIndex = (currentIndex + 1) % images.length;
-            goToSlide(currentIndex);
+            // 确保轮播图元素仍然存在
+            if (container && track) {
+                nextSlide();
+            } else {
+                stopAutoPlay(); // 如果元素不存在，停止自动播放
+            }
         }, 3000);
-    });
+    }
+    
+    // 停止自动播放
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+    }
+    
+    // 下一张
+    function nextSlide() {
+        // 计算下一张幻灯片的索引
+        let nextIndex = currentSlide + 1;
+        // 检查是否到达最后一张克隆的幻灯片
+        if (nextIndex === slideCount - 1) {
+            // 先移动到克隆的第一张幻灯片
+            currentSlide = slideCount - 1;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的第一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = 1;
+                updateCarousel();
+            }, 600);
+        } else {
+            goToSlide(nextIndex);
+        }
+    }
+    
+    // 上一张
+    function prevSlide() {
+        // 计算上一张幻灯片的索引
+        let prevIndex = currentSlide - 1;
+        // 检查是否到达第一张克隆的幻灯片
+        if (prevIndex === 0) {
+            // 先移动到克隆的最后一张幻灯片
+            currentSlide = 0;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的最后一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = slideCount - 2;
+                updateCarousel();
+            }, 600);
+        } else {
+            goToSlide(prevIndex);
+        }
+    }
     
     // 前往指定幻灯片
     function goToSlide(index) {
-        currentIndex = index;
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        // 处理边界情况
+        if (index < 0) index = 0;
+        if (index >= slideCount) index = slideCount - 1;
         
-        // 更新指示器
-        const indicatorElements = indicators.querySelectorAll('.indicator');
-        indicatorElements.forEach((indicator, i) => {
-            if (i === currentIndex) {
+        // 处理从最后一张到第一张的特殊情况（从右侧进入）
+        if (currentSlide === slideCount - 2 && index === 1) {
+            // 先移动到克隆的第一张幻灯片
+            currentSlide = slideCount - 1;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的第一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = 1;
+                updateCarousel();
+            }, 600);
+        }
+        // 处理从第一张到最后一张的特殊情况（从左侧进入）
+        else if (currentSlide === 1 && index === slideCount - 2) {
+            // 先移动到克隆的最后一张幻灯片
+            currentSlide = 0;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的最后一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = slideCount - 2;
+                updateCarousel();
+            }, 600);
+        }
+        // 正常切换
+        else {
+            currentSlide = index;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+        }
+    }
+    
+    // 更新轮播图状态
+    function updateCarousel() {
+        // 确保DOM元素存在
+        if (!container || !track || !indicatorElements) return;
+        
+        const slideWidth = 100; // 百分比宽度
+        track.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+        
+        // 计算当前应该激活的指示器索引
+        let activeIndex = currentSlide - 1; // 减1因为我们在开始添加了一张幻灯片
+        
+        // 处理特殊情况：当currentSlide是0（克隆的最后一张）时，应该激活最后一个指示器
+        if (currentSlide === 0) {
+            activeIndex = indicatorElements.length - 1;
+        }
+        // 当currentSlide是slideCount-1（克隆的第一张）时，应该激活第一个指示器
+        else if (currentSlide === slideCount - 1) {
+            activeIndex = 0;
+        }
+        
+        // 更新指示器状态
+        indicatorElements.forEach((indicator, index) => {
+            if (index === activeIndex) {
                 indicator.classList.add('active');
             } else {
                 indicator.classList.remove('active');
             }
         });
     }
+    
+    // 鼠标拖动开始
+    container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        track.style.transition = 'none';
+        stopAutoPlay();
+    });
+    
+    // 鼠标拖动移动
+    container.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        dragDistance = e.clientX - startX;
+        const slideWidth = container.clientWidth;
+        const movePercentage = (dragDistance / slideWidth) * 100;
+        const currentPosition = -currentSlide * 100;
+        const newPosition = currentPosition + movePercentage;
+        track.style.transform = `translateX(${newPosition}%)`;
+    });
+    
+    // 鼠标拖动结束
+    container.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        track.style.transition = 'transform 0.5s ease-in-out';
+        
+        const slideWidth = container.clientWidth;
+        if (Math.abs(dragDistance) > slideWidth / 3) {
+            if (dragDistance > 0) {
+                // 向右拖动，上一张
+                prevSlide();
+            } else {
+                // 向左拖动，下一张
+                nextSlide();
+            }
+        } else {
+            // 否则回到原位置
+            updateCarousel();
+        }
+        
+        dragDistance = 0;
+        startAutoPlay();
+    });
+    
+    // 鼠标离开容器
+    container.addEventListener('mouseleave', () => {
+        if (isDragging) {
+            isDragging = false;
+            dragDistance = 0;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+        }
+        // 只在没有正在进行的拖动操作时启动自动播放
+        startAutoPlay();
+    });
+    
+    // 触摸事件支持
+    container.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        track.style.transition = 'none';
+        stopAutoPlay();
+    });
+    
+    container.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        dragDistance = e.touches[0].clientX - startX;
+        const slideWidth = container.clientWidth;
+        const movePercentage = (dragDistance / slideWidth) * 100;
+        const currentPosition = -currentSlide * 100;
+        const newPosition = currentPosition + movePercentage;
+        track.style.transform = `translateX(${newPosition}%)`;
+    });
+    
+    container.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        track.style.transition = 'transform 0.5s ease-in-out';
+        
+        const slideWidth = container.clientWidth;
+        if (Math.abs(dragDistance) > slideWidth / 3) {
+            if (dragDistance > 0) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        } else {
+            // 否则回到原位置
+            updateCarousel();
+        }
+        
+        dragDistance = 0;
+        startAutoPlay();
+    });
+    
+    // 窗口大小改变时更新
+    window.addEventListener('resize', () => {
+        // 确保轮播图位置正确
+        track.style.transition = 'none';
+        updateCarousel();
+    });
+    
+    // 页面卸载时清理定时器
+    window.addEventListener('beforeunload', () => {
+        stopAutoPlay();
+    });
+    
+    // 开始自动播放
+    startAutoPlay();
 }
 
 // 模拟添加到购物车

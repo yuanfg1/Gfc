@@ -411,22 +411,38 @@ function initAboutCarousel() {
         return;
     }
     
+    // 为了实现平滑的循环播放，在轨道的开始和结束添加额外的幻灯片
+    // 在开始添加最后一张幻灯片的副本
+    const lastSlide = slides[slides.length - 1].cloneNode(true);
+    track.insertBefore(lastSlide, slides[0]);
+    
+    // 在结束添加第一张幻灯片的副本
+    const firstSlide = slides[0].cloneNode(true);
+    track.appendChild(firstSlide);
+    
+    // 更新幻灯片数组和计数
+    const allSlides = Array.from(track.children);
+    let slideCount = allSlides.length;
+    let currentSlide = 1; // 从1开始，因为我们在开始添加了一张幻灯片
+    
     // 创建指示器
     slides.forEach((_, index) => {
         const indicator = document.createElement('div');
         indicator.classList.add('about-carousel-indicator');
         if (index === 0) indicator.classList.add('active');
-        indicator.addEventListener('click', () => goToSlide(index));
+        indicator.addEventListener('click', () => goToSlide(index + 1)); // 加1因为我们在开始添加了一张幻灯片
         indicatorsContainer.appendChild(indicator);
     });
     
     const indicators = document.querySelectorAll('.about-carousel-indicator');
-    let currentSlide = 0;
-    const slideCount = slides.length;
     let isDragging = false;
     let startX = 0;
     let dragDistance = 0;
     let autoPlayInterval = null;
+    
+    // 初始位置设置为第一张真实幻灯片
+    const slideWidth = container.clientWidth;
+    track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
     
     // 自动播放
     function startAutoPlay() {
@@ -435,7 +451,7 @@ function initAboutCarousel() {
         autoPlayInterval = setInterval(() => {
             // 确保轮播图元素仍然存在
             if (container && track) {
-                goToSlide((currentSlide + 1) % slideCount);
+                nextSlide();
             } else {
                 stopAutoPlay(); // 如果元素不存在，停止自动播放
             }
@@ -450,14 +466,90 @@ function initAboutCarousel() {
         }
     }
     
+    // 下一张
+    function nextSlide() {
+        // 计算下一张幻灯片的索引
+        let nextIndex = currentSlide + 1;
+        // 检查是否到达最后一张克隆的幻灯片
+        if (nextIndex === slideCount - 1) {
+            // 先移动到克隆的第一张幻灯片
+            currentSlide = slideCount - 1;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的第一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = 1;
+                updateCarousel();
+            }, 600);
+        } else {
+            goToSlide(nextIndex);
+        }
+    }
+    
+    // 上一张
+    function prevSlide() {
+        // 计算上一张幻灯片的索引
+        let prevIndex = currentSlide - 1;
+        // 检查是否到达第一张克隆的幻灯片
+        if (prevIndex === 0) {
+            // 先移动到克隆的最后一张幻灯片
+            currentSlide = 0;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的最后一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = slideCount - 2;
+                updateCarousel();
+            }, 600);
+        } else {
+            goToSlide(prevIndex);
+        }
+    }
+    
     // 切换到指定幻灯片
     function goToSlide(index) {
         // 处理边界情况
         if (index < 0) index = 0;
         if (index >= slideCount) index = slideCount - 1;
         
-        currentSlide = index;
-        updateCarousel();
+        // 处理从最后一张到第一张的特殊情况（从右侧进入）
+        if (currentSlide === slideCount - 2 && index === 1) {
+            // 先移动到克隆的第一张幻灯片
+            currentSlide = slideCount - 1;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的第一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = 1;
+                updateCarousel();
+            }, 600);
+        }
+        // 处理从第一张到最后一张的特殊情况（从左侧进入）
+        else if (currentSlide === 1 && index === slideCount - 2) {
+            // 先移动到克隆的最后一张幻灯片
+            currentSlide = 0;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的最后一张幻灯片
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentSlide = slideCount - 2;
+                updateCarousel();
+            }, 600);
+        }
+        // 正常切换
+        else {
+            currentSlide = index;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+        }
     }
     
     // 更新轮播图状态
@@ -468,9 +560,21 @@ function initAboutCarousel() {
         const slideWidth = container.clientWidth;
         track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
         
+        // 计算当前应该激活的指示器索引
+        let activeIndex = currentSlide - 1; // 减1因为我们在开始添加了一张幻灯片
+        
+        // 处理特殊情况：当currentSlide是0（克隆的最后一张）时，应该激活最后一个指示器
+        if (currentSlide === 0) {
+            activeIndex = indicators.length - 1;
+        }
+        // 当currentSlide是slideCount-1（克隆的第一张）时，应该激活第一个指示器
+        else if (currentSlide === slideCount - 1) {
+            activeIndex = 0;
+        }
+        
         // 更新指示器状态
         indicators.forEach((indicator, index) => {
-            if (index === currentSlide) {
+            if (index === activeIndex) {
                 indicator.classList.add('active');
             } else {
                 indicator.classList.remove('active');
@@ -482,6 +586,7 @@ function initAboutCarousel() {
     container.addEventListener('mousedown', (e) => {
         isDragging = true;
         startX = e.clientX;
+        track.style.transition = 'none';
         stopAutoPlay();
     });
     
@@ -489,22 +594,29 @@ function initAboutCarousel() {
     container.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         dragDistance = e.clientX - startX;
+        const slideWidth = container.clientWidth;
+        const moveAmount = -currentSlide * slideWidth + dragDistance;
+        track.style.transform = `translateX(${moveAmount}px)`;
     });
     
     // 鼠标拖动结束
     container.addEventListener('mouseup', () => {
         if (!isDragging) return;
         isDragging = false;
+        track.style.transition = 'transform 0.5s ease-in-out';
         
         const slideWidth = container.clientWidth;
         if (Math.abs(dragDistance) > slideWidth / 3) {
             if (dragDistance > 0) {
                 // 向右拖动，上一张
-                goToSlide((currentSlide - 1 + slideCount) % slideCount);
+                prevSlide();
             } else {
                 // 向左拖动，下一张
-                goToSlide((currentSlide + 1) % slideCount);
+                nextSlide();
             }
+        } else {
+            // 否则回到原位置
+            updateCarousel();
         }
         
         dragDistance = 0;
@@ -516,6 +628,8 @@ function initAboutCarousel() {
         if (isDragging) {
             isDragging = false;
             dragDistance = 0;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
         }
         // 只在没有正在进行的拖动操作时启动自动播放
         startAutoPlay();
@@ -525,25 +639,33 @@ function initAboutCarousel() {
     container.addEventListener('touchstart', (e) => {
         isDragging = true;
         startX = e.touches[0].clientX;
+        track.style.transition = 'none';
         stopAutoPlay();
     });
     
     container.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         dragDistance = e.touches[0].clientX - startX;
+        const slideWidth = container.clientWidth;
+        const moveAmount = -currentSlide * slideWidth + dragDistance;
+        track.style.transform = `translateX(${moveAmount}px)`;
     });
     
     container.addEventListener('touchend', () => {
         if (!isDragging) return;
         isDragging = false;
+        track.style.transition = 'transform 0.5s ease-in-out';
         
         const slideWidth = container.clientWidth;
         if (Math.abs(dragDistance) > slideWidth / 3) {
             if (dragDistance > 0) {
-                goToSlide((currentSlide - 1 + slideCount) % slideCount);
+                prevSlide();
             } else {
-                goToSlide((currentSlide + 1) % slideCount);
+                nextSlide();
             }
+        } else {
+            // 否则回到原位置
+            updateCarousel();
         }
         
         dragDistance = 0;
@@ -551,7 +673,11 @@ function initAboutCarousel() {
     });
     
     // 窗口大小改变时更新
-    window.addEventListener('resize', updateCarousel);
+    window.addEventListener('resize', () => {
+        // 确保轮播图位置正确
+        track.style.transition = 'none';
+        updateCarousel();
+    });
     
     // 页面卸载时清理定时器
     window.addEventListener('beforeunload', () => {

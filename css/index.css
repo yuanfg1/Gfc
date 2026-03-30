@@ -60,6 +60,11 @@ body {
 }
 
 /* 轮播图样式 */
+.hero {
+    width: 100%;
+    overflow: hidden;
+}
+
 .carousel-container {
     position: relative;
     width: 100%;
