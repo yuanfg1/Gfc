@@ -68,41 +68,8 @@ function getUrlParameter(name) {
 
 // 获取商品文件夹中的图片
 function getProductImages(folder) {
-    // 根据文件夹名称获取对应的图片
-    const imageMap = {
-        '大果红花': [
-            '../img/11.jpg',
-            '../img/15.jpg',
-            '../img/16.jpg',
-            '../img/17.jpg',
-            '../img/18.jpg',
-            '../img/19.jpg'
-        ],
-        '山茶油': [
-            '../img/12.jpg',
-            '../img/20.jpg',
-            '../img/21.jpg',
-            '../img/22.jpg',
-            '../img/15.jpg',
-            '../img/16.jpg'
-        ],
-        '一级菜籽油': [
-            '../img/13.jpg',
-            '../img/17.jpg',
-            '../img/18.jpg',
-            '../img/19.jpg',
-            '../img/20.jpg'
-        ],
-        '二级菜籽油': [
-            '../img/14.jpg',
-            '../img/21.jpg',
-            '../img/22.jpg',
-            '../img/15.jpg',
-            '../img/16.jpg'
-        ]
-    };
-    
-    return imageMap[folder] || [];
+    // 从路径管理文件获取对应的图片
+    return paths.images.productDetails[folder] || [];
 }
 
 // 渲染商品详情
@@ -143,7 +110,7 @@ function renderProductDetail() {
         // 显示默认图片
         const track = document.getElementById('productTrack');
         const indicators = document.getElementById('productIndicators');
-        track.innerHTML = '<div class="carousel-slide"><img src="../img/11.jpg" alt="默认图片"></div>';
+        track.innerHTML = `<div class="carousel-slide"><img src="${paths.images.products['大果红花'].replace('./', '../')}" alt="默认图片"></div>`;
         indicators.innerHTML = '<div class="indicator active"></div>';
     }
 }

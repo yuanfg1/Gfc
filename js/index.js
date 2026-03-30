@@ -1,15 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 确保DOM元素存在
     const track = document.getElementById('track');
-    const slides = Array.from(track.children);
     const indicatorsContainer = document.getElementById('indicators');
+    const carouselContainer = document.getElementById('carousel');
     
+    if (!track || !indicatorsContainer || !carouselContainer) {
+        console.error('轮播图DOM元素不存在');
+        return;
+    }
+    
+    const slides = Array.from(track.children);
     let currentIndex = 1; // 从1开始，因为我们会在开始和结束添加额外的幻灯片
     let slideCount = slides.length;
-    let autoPlayInterval;
+    let autoPlayInterval = null;
     let startX = 0;
     let currentX = 0;
     let isDragging = false;
-    let autoPlayDelay;
+    let autoPlayDelay = null;
 
     // 为了实现平滑的循环播放，我们需要在轨道的开始和结束添加额外的幻灯片
     // 在开始添加最后一张幻灯片的副本
@@ -43,21 +50,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 更新轮播图位置
     function updateCarousel() {
+        // 确保track元素存在
+        if (!track) return;
+        
         const amountToMove = -currentIndex * 100;
         track.style.transform = `translateX(${amountToMove}%)`;
         
         // 更新指示器状态
-        indicators.forEach((indicator, index) => {
-            if (index === currentIndex - 1) { // 减1因为我们在开始添加了一张幻灯片
-                indicator.classList.add('active');
-            } else {
-                indicator.classList.remove('active');
+        if (indicators && indicators.length > 0) {
+            // 计算当前应该激活的指示器索引
+            let activeIndex = currentIndex - 1; // 减1因为我们在开始添加了一张幻灯片
+            
+            // 处理特殊情况：当currentIndex是0（克隆的最后一张）时，应该激活最后一个指示器
+            if (currentIndex === 0) {
+                activeIndex = indicators.length - 1;
             }
-        });
+            // 当currentIndex是slideCount-1（克隆的第一张）时，应该激活第一个指示器
+            else if (currentIndex === slideCount - 1) {
+                activeIndex = 0;
+            }
+            
+            // 更新指示器状态
+            indicators.forEach((indicator, index) => {
+                if (index === activeIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
     }
 
     // 切换到指定幻灯片
     function goToSlide(index) {
+        // 处理边界情况
+        if (index < 0) index = 0;
+        if (index >= slideCount) index = slideCount - 1;
+        
         // 处理从最后一张到第一张的特殊情况（从右侧进入）
         if (currentIndex === slideCount - 2 && index === 1) {
             // 先移动到克隆的第一张幻灯片
@@ -66,11 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCarousel();
             
             // 动画完成后，立即跳转到真实的第一张幻灯片
-            setTimeout(() => {
+            if (autoPlayDelay) clearTimeout(autoPlayDelay);
+            autoPlayDelay = setTimeout(() => {
                 track.style.transition = 'none';
                 currentIndex = 1;
                 updateCarousel();
-            }, 500);
+            }, 600); // 增加延迟时间，确保动画完成
         }
         // 处理从第一张到最后一张的特殊情况（从左侧进入）
         else if (currentIndex === 1 && index === slideCount - 2) {
@@ -80,11 +110,12 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCarousel();
             
             // 动画完成后，立即跳转到真实的最后一张幻灯片
-            setTimeout(() => {
+            if (autoPlayDelay) clearTimeout(autoPlayDelay);
+            autoPlayDelay = setTimeout(() => {
                 track.style.transition = 'none';
                 currentIndex = slideCount - 2;
                 updateCarousel();
-            }, 500);
+            }, 600); // 增加延迟时间，确保动画完成
         }
         // 正常切换
         else {
@@ -96,16 +127,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 下一张
     function nextSlide() {
-        goToSlide(currentIndex + 1);
+        // 计算下一张幻灯片的索引
+        let nextIndex = currentIndex + 1;
+        // 检查是否到达最后一张克隆的幻灯片
+        if (nextIndex === slideCount - 1) {
+            // 先移动到克隆的第一张幻灯片
+            currentIndex = slideCount - 1;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel();
+            
+            // 动画完成后，立即跳转到真实的第一张幻灯片
+            if (autoPlayDelay) clearTimeout(autoPlayDelay);
+            autoPlayDelay = setTimeout(() => {
+                track.style.transition = 'none';
+                currentIndex = 1;
+                updateCarousel();
+            }, 600);
+        } else {
+            goToSlide(nextIndex);
+        }
     }
 
     // 上一张
     function prevSlide() {
-        goToSlide(currentIndex - 1);
+        // 计算上一张幻灯片的索引
+        let prevIndex = currentIndex - 1;
+        if (prevIndex < 0) {
+            prevIndex = slideCount - 2; // 回到最后一张真实幻灯片
+        }
+        goToSlide(prevIndex);
     }
-
-    // 触摸/鼠标事件处理
-    const carouselContainer = document.getElementById('carousel');
 
     // 开始拖动
     function startDrag(e) {
@@ -147,11 +198,49 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCarousel();
         }
         // 延迟重启自动播放，确保过渡完成
-        clearTimeout(autoPlayDelay);
+        if (autoPlayDelay) clearTimeout(autoPlayDelay);
         autoPlayDelay = setTimeout(() => {
             startAutoPlay();
         }, 1000);
     }
+
+    // 自动播放功能
+    function startAutoPlay() {
+        stopAutoPlay(); // 确保先停止之前的定时器
+        autoPlayInterval = setInterval(() => {
+            // 确保轮播图元素仍然存在
+            if (track && carouselContainer) {
+                nextSlide();
+            } else {
+                stopAutoPlay(); // 如果元素不存在，停止自动播放
+            }
+        }, 3000);
+    }
+
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+        if (autoPlayDelay) {
+            clearTimeout(autoPlayDelay);
+            autoPlayDelay = null;
+        }
+    }
+
+    function resetAutoPlay() {
+        stopAutoPlay();
+        startAutoPlay();
+    }
+
+    // 鼠标悬停时暂停自动播放
+    carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+    carouselContainer.addEventListener('mouseleave', () => {
+        if (autoPlayDelay) clearTimeout(autoPlayDelay);
+        autoPlayDelay = setTimeout(() => {
+            startAutoPlay();
+        }, 500);
+    });
 
     // 事件监听
     carouselContainer.addEventListener('mousedown', startDrag);
@@ -164,29 +253,26 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('touchmove', drag, { passive: false });
     document.addEventListener('touchend', endDrag);
 
-    // 自动播放功能
-    function startAutoPlay() {
+    // 窗口大小改变时更新轮播图位置
+    window.addEventListener('resize', () => {
+        // 确保轮播图位置正确
+        track.style.transition = 'none';
+        updateCarousel();
+    });
+
+    // 页面卸载时清理定时器和事件监听器
+    window.addEventListener('beforeunload', () => {
         stopAutoPlay();
-        autoPlayInterval = setInterval(nextSlide, 3000);
-    }
-
-    function stopAutoPlay() {
-        clearInterval(autoPlayInterval);
-        clearTimeout(autoPlayDelay);
-    }
-
-    function resetAutoPlay() {
-        stopAutoPlay();
-        startAutoPlay();
-    }
-
-    // 鼠标悬停时暂停自动播放
-    carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-    carouselContainer.addEventListener('mouseleave', () => {
-        clearTimeout(autoPlayDelay);
-        autoPlayDelay = setTimeout(() => {
-            startAutoPlay();
-        }, 500);
+        // 移除事件监听器
+        carouselContainer.removeEventListener('mousedown', startDrag);
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('mouseleave', endDrag);
+        carouselContainer.removeEventListener('touchstart', startDrag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('touchend', endDrag);
+        carouselContainer.removeEventListener('mouseenter', stopAutoPlay);
+        window.removeEventListener('resize', updateCarousel);
     });
 
     // 启动自动播放
@@ -283,12 +369,10 @@ function renderAnnouncements(category) {
 // 直接打开检测报告PDF
 function openCertificatePDF(category) {
     // 获取对应类别的检测报告PDF
-    const certificatePDFs = getCertificatePDFs(category);
+    const pdfPath = paths.pdfs[category];
     
-    if (certificatePDFs.length > 0) {
-        // 直接打开第一个PDF文件
-        const pdf = certificatePDFs[0];
-        window.open(`./img/jiancebaogao/${pdf.file}`, '_blank');
+    if (pdfPath) {
+        window.open(pdfPath, '_blank');
     } else {
         alert('暂无检测报告PDF');
     }
@@ -322,7 +406,10 @@ function initAboutCarousel() {
     const slides = document.querySelectorAll('.about-carousel-slide');
     const indicatorsContainer = document.querySelector('.about-carousel-indicators');
     
-    if (!container || !track || !slides.length) return;
+    if (!container || !track || !slides.length || !indicatorsContainer) {
+        console.error('关于我们轮播图DOM元素不存在');
+        return;
+    }
     
     // 创建指示器
     slides.forEach((_, index) => {
@@ -344,11 +431,14 @@ function initAboutCarousel() {
     // 自动播放
     function startAutoPlay() {
         // 确保只有一个计时器在运行
-        if (autoPlayInterval) {
-            clearInterval(autoPlayInterval);
-        }
+        stopAutoPlay();
         autoPlayInterval = setInterval(() => {
-            goToSlide((currentSlide + 1) % slideCount);
+            // 确保轮播图元素仍然存在
+            if (container && track) {
+                goToSlide((currentSlide + 1) % slideCount);
+            } else {
+                stopAutoPlay(); // 如果元素不存在，停止自动播放
+            }
         }, 5000);
     }
     
@@ -362,12 +452,19 @@ function initAboutCarousel() {
     
     // 切换到指定幻灯片
     function goToSlide(index) {
+        // 处理边界情况
+        if (index < 0) index = 0;
+        if (index >= slideCount) index = slideCount - 1;
+        
         currentSlide = index;
         updateCarousel();
     }
     
     // 更新轮播图状态
     function updateCarousel() {
+        // 确保DOM元素存在
+        if (!container || !track || !indicators) return;
+        
         const slideWidth = container.clientWidth;
         track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
         
@@ -456,6 +553,11 @@ function initAboutCarousel() {
     // 窗口大小改变时更新
     window.addEventListener('resize', updateCarousel);
     
+    // 页面卸载时清理定时器
+    window.addEventListener('beforeunload', () => {
+        stopAutoPlay();
+    });
+    
     // 开始自动播放
     startAutoPlay();
 }
@@ -471,23 +573,7 @@ function loadCertificates() {
     if (typeof products !== 'undefined') {
         products.forEach(product => {
             // 自动获取对应商品文件夹中的第一张图片
-            let imagePath;
-            switch (product.folder) {
-                case '大果红花':
-                    imagePath = './img/11.jpg';
-                    break;
-                case '山茶油':
-                    imagePath = './img/12.jpg';
-                    break;
-                case '一级菜籽油':
-                    imagePath = './img/13.jpg';
-                    break;
-                case '二级菜籽油':
-                    imagePath = './img/14.jpg';
-                    break;
-                default:
-                    imagePath = './img/11.jpg';
-            }
+            let imagePath = paths.images.products[product.folder] || paths.images.products['大果红花'];
             
             const certificateItem = document.createElement('div');
             certificateItem.classList.add('certificate-item');
