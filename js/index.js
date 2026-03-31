@@ -114,12 +114,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // 动态生成轮播图幻灯片
-    if (track && siteData.carousel && paths.images.carousel) {
+    if (track && paths.images.carousel) {
         track.innerHTML = '';
         const carouselImages = Object.values(paths.images.carousel);
         
-        siteData.carousel.forEach((data, index) => {
-            const imagePath = carouselImages[index] || carouselImages[0];
+        // 根据图片路径数量生成轮播图
+        carouselImages.forEach((imagePath, index) => {
+            const data = siteData.carousel[index] || siteData.carousel[0];
             
             const slide = document.createElement('div');
             slide.classList.add('carousel-slide');
@@ -620,15 +621,14 @@ function initAboutCarousel() {
     }
     
     // 动态生成关于我们轮播图幻灯片
-    if (siteData.about.carousel && paths.images.about) {
+    if (paths.images.about) {
         track.innerHTML = '';
         indicatorsContainer.innerHTML = '';
         
         const aboutImages = Object.values(paths.images.about);
         
-        siteData.about.carousel.forEach((data, index) => {
-            const imagePath = aboutImages[index] || aboutImages[0];
-            
+        // 根据图片路径数量生成轮播图
+        aboutImages.forEach((imagePath, index) => {
             const slide = document.createElement('div');
             slide.classList.add('about-carousel-slide');
             slide.innerHTML = `

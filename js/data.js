@@ -6,6 +6,7 @@ const announcements = {
         {
             title: '茶油的来历',
             date: '2026-03-29',
+            
             content: `
                 <p>茶油是从山茶科油茶树种子中获得的，是我国最古老的木本油料树种之一，中国是世界上山茶科植物分布最广的国家，也是世界上最大的茶油生产基地。</p>
                 <p>茶油的生产过程需要经过一系列的传统工序，包括采摘、晾晒、分拣、去壳、粉碎、蒸煮、压榨、过滤等。</p>
@@ -82,12 +83,15 @@ const paths = {
             4: './img/4.jpg',
             5: './img/5.jpg',
             6: './img/6.jpg',
+            7: './img/20.jpg',
+            8: './img/21.jpg',
         },
         // 关于我们
         about: {
             1: './img/8.jpg',
             2: './img/9.jpg',
             3: './img/10.jpg',
+            4: './img/15.jpg',
         },
         // 商品图片
         products: {
@@ -148,7 +152,7 @@ const paths = {
 const siteData = {
     // 网站基本信息
     site: {
-        title: "塞北仙翁测试",
+        title: "塞北仙翁",
         favicon: "./favicon.ico"
     },
     // 头部导航
