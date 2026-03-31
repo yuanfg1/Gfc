@@ -65,66 +65,42 @@ window.onload = function() {
     // 创建页脚组件
     createFooter();
     
-    // 从URL获取公告标题和日期
-    const title = getUrlParameter('title');
-    const date = getUrlParameter('date');
-    const category = getUrlParameter('category') || 'press'; // 默认为press类别
+    // 直接使用第一条公告数据进行测试
+    const foundAnnouncement = announcements.press[0];
+    const foundCategory = 'press';
+    const announcementIndex = 0;
     
-    if (title && date && announcements) {
-        let foundAnnouncement = null;
-        let foundCategory = category;
-        let announcementIndex = -1;
+    console.log('直接使用第一条公告:', foundAnnouncement);
+    
+    // 显示公告详情
+    if (foundAnnouncement) {
+        console.log('显示公告详情');
+        document.getElementById('detailTitle').textContent = foundAnnouncement.title;
+        document.getElementById('detailDate').textContent = '发布日期：' + foundAnnouncement.date;
+        document.getElementById('detailContent').innerHTML = foundAnnouncement.content;
         
-        // 如果指定了类别，则在指定类别中查找
-        if (announcements[category]) {
-            announcementIndex = announcements[category].findIndex(a => a.title === title && a.date === date);
-            if (announcementIndex !== -1) {
-                foundAnnouncement = announcements[category][announcementIndex];
-            }
-        }
-        
-        // 如果在指定类别中未找到，则遍历所有类别查找
-        if (!foundAnnouncement) {
-            for (const cat in announcements) {
-                const index = announcements[cat].findIndex(a => a.title === title && a.date === date);
-                if (index !== -1) {
-                    foundAnnouncement = announcements[cat][index];
-                    foundCategory = cat;
-                    announcementIndex = index;
-                    break;
-                }
-            }
-        }
-        
-        // 显示公告详情
-        if (foundAnnouncement) {
-            document.getElementById('detailTitle').textContent = foundAnnouncement.title;
-            document.getElementById('detailDate').textContent = '发布日期：' + foundAnnouncement.date;
-            document.getElementById('detailContent').innerHTML = foundAnnouncement.content;
-            
-            // 显示公告来源
-            const sourceElement = document.getElementById('detailSource');
-            if (sourceElement && foundAnnouncement.source) {
-                sourceElement.textContent = '来源：' + foundAnnouncement.source;
-            }
-            
-            // 显示上一条和下一条公告
-            displayNavigationLinks(foundCategory, announcementIndex);
+        // 显示公告来源
+        console.log('foundAnnouncement.source:', foundAnnouncement.source);
+        const sourceElement = document.getElementById('detailSource');
+        console.log('sourceElement:', sourceElement);
+        if (sourceElement && foundAnnouncement.source) {
+            sourceElement.textContent = '来源：' + foundAnnouncement.source;
+            console.log('设置了来源内容:', sourceElement.textContent);
+            // 添加样式，确保来源信息显示
+            sourceElement.style.display = 'inline-block';
+            sourceElement.style.marginLeft = '20px';
         } else {
-            // 如果未找到公告，显示提示信息
-            document.getElementById('detailTitle').textContent = title;
-            document.getElementById('detailDate').textContent = '发布日期：' + date;
-            document.getElementById('detailContent').innerHTML = '<p>抱歉，未找到该公告的详细内容。</p>';
-            
-            // 隐藏导航链接
-            document.getElementById('prevAnnouncement').style.display = 'none';
-            document.getElementById('nextAnnouncement').style.display = 'none';
+            console.log('sourceElement或foundAnnouncement.source不存在');
         }
+        
+        // 显示上一条和下一条公告
+        displayNavigationLinks(foundCategory, announcementIndex);
     } else {
-        // 如果没有提供URL参数，显示提示信息
-        document.getElementById('detailTitle').textContent = '参数错误';
-        document.getElementById('detailDate').textContent = '';
-        document.getElementById('detailContent').innerHTML = '<p>请从公告列表页点击查看详情。</p>';
+        // 如果未找到公告，显示提示信息
+        console.log('未找到公告');
+        document.getElementById('detailTitle').textContent = '公告标题';
+        document.getElementById('detailDate').textContent = '发布日期：2026-03-29';
+        document.getElementById('detailContent').innerHTML = '<p>抱歉，未找到该公告的详细内容。</p>';
         
         // 隐藏导航链接
         document.getElementById('prevAnnouncement').style.display = 'none';
