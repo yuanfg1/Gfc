@@ -102,6 +102,12 @@ window.onload = function() {
             document.getElementById('detailDate').textContent = '发布日期：' + foundAnnouncement.date;
             document.getElementById('detailContent').innerHTML = foundAnnouncement.content;
             
+            // 显示公告来源
+            const sourceElement = document.querySelector('.announcement-detail-meta span:nth-child(2)');
+            if (sourceElement && foundAnnouncement.source) {
+                sourceElement.textContent = '来源：' + foundAnnouncement.source;
+            }
+            
             // 显示上一条和下一条公告
             displayNavigationLinks(foundCategory, announcementIndex);
         } else {
