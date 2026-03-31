@@ -103,7 +103,7 @@ window.onload = function() {
             document.getElementById('detailContent').innerHTML = foundAnnouncement.content;
             
             // 显示公告来源
-            const sourceElement = document.querySelector('.announcement-detail-meta span:nth-child(2)');
+            const sourceElement = document.getElementById('detailSource');
             if (sourceElement && foundAnnouncement.source) {
                 sourceElement.textContent = '来源：' + foundAnnouncement.source;
             }
