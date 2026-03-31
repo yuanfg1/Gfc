@@ -97,7 +97,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0,0,0,0.6);
+    background: transparent;
     color: #fff;
     padding: 30px;
 }
@@ -278,7 +278,6 @@ body {
     height: 400px;
     overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .about-carousel-track {
@@ -378,7 +377,7 @@ body {
     text-align: center;
 }
 
-/* 证书展示 */
+/* 检测报告 */
 .certificates {
     padding: 60px 0;
     background-color: #f8f9fa;

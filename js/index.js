@@ -1,11 +1,145 @@
+// 创建头部导航组件
+function createHeader() {
+    const headerElement = document.querySelector('.header');
+    if (!headerElement) return;
+    
+    headerElement.innerHTML = `
+        <div class="container">
+            <div class="logo"><img src="${paths.base.logo}" alt="${siteData.header.logo}" height="50"></div>
+            <nav class="nav">
+                <ul>
+                    ${siteData.header.navLinks.map(link => `
+                        <li><a href="${link.href}">${link.text}</a></li>
+                    `).join('')}
+                </ul>
+            </nav>
+        </div>
+    `;
+}
+
+// 创建页脚组件
+function createFooter() {
+    const footerElement = document.querySelector('.footer');
+    if (!footerElement) return;
+    
+    footerElement.innerHTML = `
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">${siteData.footer.logo}</div>
+                <div class="footer-links">
+                    <ul>
+                        ${siteData.footer.navLinks.map(link => `
+                            <li><a href="${link.href}">${link.text}</a></li>
+                        `).join('')}
+                    </ul>
+                </div>
+                <div class="footer-copyright">
+                    <p>${siteData.footer.copyright}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    // 确保DOM元素存在
+    // 创建头部导航组件
+    createHeader();
+    // 创建页脚组件
+    createFooter();
+    
+    // 确保 DOM 元素存在
     const track = document.getElementById('track');
     const indicatorsContainer = document.getElementById('indicators');
     const carouselContainer = document.getElementById('carousel');
     
+    // 动态生成轮播图幻灯片
+    if (track && siteData.carousel && paths.images.carousel) {
+        track.innerHTML = '';
+        const carouselImages = Object.values(paths.images.carousel);
+        
+        siteData.carousel.forEach((data, index) => {
+            const imagePath = carouselImages[index] || carouselImages[0];
+            
+            const slide = document.createElement('div');
+            slide.classList.add('carousel-slide');
+            slide.innerHTML = `
+                <img src="${imagePath}" alt="${data.title}">
+                <div class="carousel-content">
+                    <h2>${data.title}</h2>
+                    <p>${data.description}</p>
+                    <a href="${data.link}" class="btn">${data.linkText}</a>
+                </div>
+            `;
+            track.appendChild(slide);
+        });
+    }
+    
     if (!track || !indicatorsContainer || !carouselContainer) {
-        console.error('轮播图DOM元素不存在');
+        console.error('轮播图 DOM 元素不存在');
+        return;
+    }
+    
+    // 替换关于我们轮播图的图片路径
+    const aboutTrack = document.querySelector('.about-carousel-track');
+    if (aboutTrack) {
+        const aboutSlides = aboutTrack.querySelectorAll('.about-carousel-slide img');
+        aboutSlides.forEach((img, index) => {
+            const pathKey = index + 1;
+            if (paths.images.about[pathKey]) {
+                img.src = paths.images.about[pathKey];
+            }
+        });
+    }
+    
+// ... existing code ...
+    
+    // 动态加载联系我们内容
+    const contactSection = document.querySelector('.contact');
+    if (contactSection) {
+        const title = contactSection.querySelector('.section-title');
+        const address = contactSection.querySelector('.contact-info p:nth-child(1)');
+        const phone = contactSection.querySelector('.contact-info p:nth-child(2)');
+        const email = contactSection.querySelector('.contact-info p:nth-child(3)');
+        
+        if (title && siteData.contact.title) {
+            title.textContent = siteData.contact.title;
+        }
+        
+        if (address && siteData.contact.address) {
+            address.innerHTML = `<strong>地址：</strong>${siteData.contact.address}`;
+        }
+        
+        if (phone && siteData.contact.phone) {
+            phone.innerHTML = `<strong>电话：</strong>${siteData.contact.phone}`;
+        }
+        
+        if (email && siteData.contact.email) {
+            email.innerHTML = `<strong>邮箱：</strong>${siteData.contact.email}`;
+        }
+    }
+    
+    // 动态加载页脚内容
+    const footer = document.querySelector('.footer');
+    if (footer) {
+        const logo = footer.querySelector('.footer-logo');
+        const copyright = footer.querySelector('.footer-copyright p');
+        
+        if (logo && siteData.footer.logo) {
+            logo.textContent = siteData.footer.logo;
+        }
+        
+        if (copyright && siteData.footer.copyright) {
+            copyright.textContent = siteData.footer.copyright;
+        }
+    }
+    
+    // 同步网站图标路径
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon && paths.base.favicon) {
+        favicon.href = paths.base.favicon;
+    }
+    
+    if (!track || !indicatorsContainer || !carouselContainer) {
         return;
     }
     
@@ -358,7 +492,7 @@ function renderAnnouncements(category) {
                 const title = this.getAttribute('data-title');
                 const date = this.getAttribute('data-date');
                 const encodedTitle = encodeURIComponent(title);
-                window.location.href = './html/announcement-detail.html?title=' + encodedTitle + '&date=' + date;
+                window.location.href = paths.pages.announcementDetail + '?title=' + encodedTitle + '&date=' + date;
             });
         });
     }

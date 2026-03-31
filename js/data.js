@@ -1,8 +1,13 @@
 // 数据管理文件
-
+ 
 // 公告数据
 const announcements = {
     press: [
+        { 
+            title: '茶油的生长过程', 
+            date: '2026-09-25',
+            content: '<p>美容养颜：茶油含有大量的维生素E和抗氧化成分，长期涂抹于皮肤可以保湿滋润，减少皱纹，去除眼纹、妊娠纹，使皮肤更加光滑细腻。此外，茶油中的维生素E能中和自由基，减少氧化应激对黑色素细胞的刺激，长期坚持用茶油按摩面部可减缓黄褐斑扩散。</p><p>降低血脂：茶油中富含不饱和脂肪酸，有助于降低血清总胆固醇和低密度脂蛋白胆固醇，从而帮助维持心血管健康。茶油中的植物甾醇可竞争性抑制胆固醇吸收，对高甘油三酯血症患者有益。</p><p>促进消化：茶油具有良好的润肠通便作用，能够促进胃肠道蠕动，改善消化功能，对缓解便秘有一定的帮助。茶油还能刺激胃酸分泌，促进食物消化，并在胃黏膜上形成保护层，减少胃酸对胃壁的侵蚀。抗炎抗菌：茶油中含有多种生物活性物质，如茶多酚、黄酮类等，这些成分能够帮助身体抵抗外界病原体入侵，同时具有一定的抗炎抗菌效果4。补充能量：茶油含丰富的油脂，能为机体补充能量，帮助恢复体力、缓解疲劳。其他功效：茶油还具有清热化湿、解毒杀虫、促进乳汁分泌、防止蚊虫叮咬等功效。对于哺乳期的女性，茶油还能促进乳汁分泌，有助于胎儿发育</p>'
+        },
         { 
             title: '茶油的好处', 
             date: '2026-09-25',
@@ -23,6 +28,11 @@ const announcements = {
 
 // 路径管理
 const paths = {
+    // 网站基础文件
+    base: {
+        favicon: './favicon.ico',
+        logo: './logo.png'
+    },
     // 图片路径
     images: {
         // 轮播图
@@ -32,20 +42,20 @@ const paths = {
             3: './img/3.jpg',
             4: './img/4.jpg',
             5: './img/5.jpg',
-            6: './img/6.jpg'
+            6: './img/6.jpg',
         },
         // 关于我们
         about: {
             1: './img/8.jpg',
             2: './img/9.jpg',
-            3: './img/10.jpg'
+            3: './img/10.jpg',
         },
         // 商品图片
         products: {
             '大果红花': './img/11.jpg',
             '山茶油': './img/12.jpg',
             '一级菜籽油': './img/13.jpg',
-            '二级菜籽油': './img/14.jpg'
+            '二级菜籽油': './img/14.jpg',
         },
         // 商品详情页图片
         productDetails: {
@@ -55,7 +65,7 @@ const paths = {
                 '../img/16.jpg',
                 '../img/17.jpg',
                 '../img/18.jpg',
-                '../img/19.jpg'
+                '../img/19.jpg',
             ],
             '山茶油': [
                 '../img/12.jpg',
@@ -63,21 +73,21 @@ const paths = {
                 '../img/21.jpg',
                 '../img/22.jpg',
                 '../img/15.jpg',
-                '../img/16.jpg'
+                '../img/16.jpg',
             ],
             '一级菜籽油': [
                 '../img/13.jpg',
                 '../img/17.jpg',
                 '../img/18.jpg',
                 '../img/19.jpg',
-                '../img/20.jpg'
+                '../img/20.jpg',
             ],
             '二级菜籽油': [
                 '../img/14.jpg',
                 '../img/21.jpg',
                 '../img/22.jpg',
                 '../img/15.jpg',
-                '../img/16.jpg'
+                '../img/16.jpg',
             ]
         }
     },
@@ -86,12 +96,93 @@ const paths = {
         '大果红花': './img/jiancebaogao/大果红花茶油-筠连县高峰商贸有限公司.pdf',
         '山茶油': './img/jiancebaogao/山茶油-筠连县高峰商贸有限公司.pdf',
         '一级菜籽油': './img/jiancebaogao/一级菜籽油最新  高峰村 商贸有限公司 专业检测报告.pdf',
-        '二级菜籽油': './img/jiancebaogao/二级菜籽油最新  高峰村 商贸有限公司 专业检测报告.pdf'
+        '二级菜籽油': './img/jiancebaogao/二级菜籽油最新  高峰村 商贸有限公司 专业检测报告.pdf',
     },
     // 页面路径
     pages: {
         productDetail: './html/product-detail.html',
-        announcementDetail: './html/announcement-detail.html'
+        announcementDetail: './html/announcement-detail.html',
+    }
+};
+
+// 网站静态数据
+const siteData = {
+    // 头部导航
+    header: {
+        logo: "塞北仙翁",
+        navLinks: [
+            { text: "首页", href: "#home" },
+            { text: "关于我们", href: "#about" },
+            { text: "商品展示", href: "#products" },
+            { text: "检测报告", href: "#certificates" },
+            { text: "联系我们", href: "#contact" }
+        ]
+    },
+    // 轮播图数据
+    carousel: [
+        {
+            title: "优质商品",
+            description: "为您提供高品质的产品和服务",
+            link: "#products",
+            linkText: "了解更多"
+        },
+        {
+            title: "团队协作",
+            description: "专业团队为您的项目保驾护航",
+            link: "#certificates",
+            linkText: "检测报告"
+        },
+        {
+            title: "创新技术",
+            description: "引领行业发展，提供前沿解决方案",
+            link: "#about",
+            linkText: "了解我们"
+        },
+        {
+            title: "客户至上",
+            description: "以客户需求为中心，提供优质服务",
+            link: "#contact",
+            linkText: "联系我们"
+        },
+        {
+            title: "业务发展",
+            description: "助力企业成长，实现合作共赢",
+            link: "#products",
+            linkText: "商品展示"
+        },
+        {
+            title: "企业愿景",
+            description: "成为行业领先的服务提供商",
+            link: "#about",
+            linkText: "企业理念"
+        }
+    ],
+    // 关于我们
+    about: {
+        title: "关于我们",
+        content: [
+            "高峰村从 2014年12月从 广西省引进大果红花油茶和山茶，发动村民种植，现已有投产大果红花油茶基地1300多亩，山茶基地800多亩，当时我们村为什么考虑发展茶油这个产业，因为茶树树龄可达100年以上，一代人种植几代人收益管理粗放，不需用农药化肥，茶油对人体心脑血管及抗衰老有很好的作用， 高峰村榨油坊自 2023年10月建成并投入运营以来，一直秉持着传统工艺与现代技术相结合的理念，为周边地区，另外，我们还收购珙县王家、自由尖峰、联合甜竹、镇舟尖峰、镇舟云岭、沐爱、巡司、双河等地的茶籽的广大农户提供油料加工服务。",
+            "目前我们村生产的产品有（1）大果红花茶油，（2）山茶油，(3)一级纯菜籽油，(4)二级纯菜籽油四个品种，只做品质，不添加任何调和油和添加剂，属绿色产品，深受消费者喜爱，实现年产值150余万元，在当地市场占有一定份额，为推动当地油料种植产业发展、促进农民增收以及保障食用油供应等方面发挥了积极作用。打算积极动员大雪山镇老百姓种植茶油，大雪山附近村也有老百姓在种植油茶树，但现在的厂房不能满足设备生产要求。"
+        ]
+    },
+    // 联系我们
+    contact: {
+        title: "联系我们",
+        address: "四川省宜宾市筠连县大雪山镇高峰村村民委员会",
+        phone: "010-12345678",
+        email: "gfcsmyxgs@163.com"
+    },
+    // 页脚
+    footer: {
+        logo: "塞北仙翁",
+        navLinks: [
+            { text: "首页", href: "#home" },
+            { text: "关于我们", href: "#about" },
+            { text: "商品展示", href: "#products" },
+            { text: "检测报告", href: "#certificates" },
+            { text: "联系我们", href: "#contact" }
+        ],
+        copyright: "© 2026 塞北仙翁. 保留所有权利."
     }
 };
 
@@ -177,9 +268,11 @@ function loadProducts() {
             <h3>${product.name}</h3>
             <p>${product.description}</p>
             <div class="price">${product.price}</div>
-            <a href="./html/product-detail.html?id=${product.id}" class="btn">查看详情</a>
+            <a href="${paths.pages.productDetail}?id=${product.id}" class="btn">查看详情</a>
         `;
         
         productsGrid.appendChild(productItem);
     });
+    
+ 
 }

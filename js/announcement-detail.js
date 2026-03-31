@@ -85,7 +85,7 @@ function displayNavigationLinks(category, currentIndex) {
     if (prevIndex >= 0) {
         const prevAnnouncementData = announcementsList[prevIndex];
         const encodedTitle = encodeURIComponent(prevAnnouncementData.title);
-        prevLink.href = `announcement-detail.html?title=${encodedTitle}&date=${prevAnnouncementData.date}&category=${category}`;
+        prevLink.href = paths.pages.announcementDetail + `?title=${encodedTitle}&date=${prevAnnouncementData.date}&category=${category}`;
         prevLink.textContent = prevAnnouncementData.title;
         prevAnnouncement.style.display = 'block';
     } else {
@@ -96,7 +96,7 @@ function displayNavigationLinks(category, currentIndex) {
     if (nextIndex < announcementsList.length) {
         const nextAnnouncementData = announcementsList[nextIndex];
         const encodedTitle = encodeURIComponent(nextAnnouncementData.title);
-        nextLink.href = `announcement-detail.html?title=${encodedTitle}&date=${nextAnnouncementData.date}&category=${category}`;
+        nextLink.href = paths.pages.announcementDetail + `?title=${encodedTitle}&date=${nextAnnouncementData.date}&category=${category}`;
         nextLink.textContent = nextAnnouncementData.title;
         nextAnnouncement.style.display = 'block';
     } else {
