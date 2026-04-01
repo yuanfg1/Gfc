@@ -100,7 +100,6 @@ window.onload = function() {
         if (foundAnnouncement) {
             document.getElementById('detailTitle').textContent = foundAnnouncement.title;
             document.getElementById('detailDate').textContent = '发布日期：' + foundAnnouncement.date;
-            document.getElementById('detailSource').textContent = '来源：' + foundAnnouncement.date;
             document.getElementById('detailContent').innerHTML = foundAnnouncement.content;
             
             // 显示公告来源
