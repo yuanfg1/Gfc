@@ -15,6 +15,30 @@ function createHeader() {
             </nav>
         </div>
     `;
+    
+    // 为导航链接添加点击事件，实现平滑滚动并添加偏移量
+    const navLinks = headerElement.querySelectorAll('nav.nav a[href^="#"]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // 计算头部导航的高度作为偏移量
+                const headerHeight = headerElement.offsetHeight;
+                // 计算目标元素的位置
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                
+                // 平滑滚动到目标位置
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 }
 
 // 创建页脚组件
@@ -39,6 +63,31 @@ function createFooter() {
             </div>
         </div>
     `;
+    
+    // 为页脚导航链接添加点击事件，实现平滑滚动并添加偏移量
+    const navLinks = footerElement.querySelectorAll('.footer-links a[href^="#"]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // 计算头部导航的高度作为偏移量
+                const headerElement = document.querySelector('.header');
+                const headerHeight = headerElement ? headerElement.offsetHeight : 0;
+                // 计算目标元素的位置
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                
+                // 平滑滚动到目标位置
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
