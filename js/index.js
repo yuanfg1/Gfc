@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="carousel-content">
                     <h2>${data.title}</h2>
                     <p>${data.description}</p>
-                    <a href="${data.link}" class="btn">${data.linkText}</a>
                 </div>
             `;
             track.appendChild(slide);
