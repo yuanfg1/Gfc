@@ -179,7 +179,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-
+    // 动态加载联系我们内容
+    const contactSection = document.querySelector('.contact');
+    if (contactSection) {
+        const title = contactSection.querySelector('.section-title');
+        const address = contactSection.querySelector('.contact-info p:nth-child(1)');
+        const phone = contactSection.querySelector('.contact-info p:nth-child(2)');
+        const email = contactSection.querySelector('.contact-info p:nth-child(3)');
+        
+        if (title && siteData.contact.title) {
+            title.textContent = siteData.contact.title;
+        }
+        
+        if (address && siteData.contact.address) {
+            address.innerHTML = `<strong>地址：</strong>${siteData.contact.address}`;
+        }
+        
+        if (phone && siteData.contact.phone) {
+            phone.innerHTML = `<strong>电话：</strong>${siteData.contact.phone}`;
+        }
+        
+        if (email && siteData.contact.email) {
+            email.innerHTML = `<strong>邮箱：</strong>${siteData.contact.email}`;
+        }
+    }
     
     // 动态生成轮播图幻灯片
     if (track && paths.images.carousel) {
@@ -206,35 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!track || !indicatorsContainer || !carouselContainer) {
         console.error('轮播图 DOM 元素不存在');
         return;
-    }
-    
-
-    
-// ... existing code ...
-    
-    // 动态加载联系我们内容
-    const contactSection = document.querySelector('.contact');
-    if (contactSection) {
-        const title = contactSection.querySelector('.section-title');
-        const address = contactSection.querySelector('.contact-info p:nth-child(1)');
-        const phone = contactSection.querySelector('.contact-info p:nth-child(2)');
-        const email = contactSection.querySelector('.contact-info p:nth-child(3)');
-        
-        if (title && siteData.contact.title) {
-            title.textContent = siteData.contact.title;
-        }
-        
-        if (address && siteData.contact.address) {
-            address.innerHTML = `<strong>地址：</strong>${siteData.contact.address}`;
-        }
-        
-        if (phone && siteData.contact.phone) {
-            phone.innerHTML = `<strong>电话：</strong>${siteData.contact.phone}`;
-        }
-        
-        if (email && siteData.contact.email) {
-            email.innerHTML = `<strong>邮箱：</strong>${siteData.contact.email}`;
-        }
     }
     
     // 动态加载页脚内容

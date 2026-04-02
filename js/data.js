@@ -261,7 +261,7 @@ const siteData = {
     contact: {
         title: "联系我们",
         address: "四川省宜宾市筠连县大雪山镇高峰村村民委员会",
-        phone: "010-12345678",
+        phone: "15348165666",
         email: "gfcsmyxgs@163.com"
     },
     // 页脚
