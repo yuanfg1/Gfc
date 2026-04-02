@@ -160,6 +160,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // 动态加载山茶油的吃法内容
+    const usageSection = document.querySelector('.usage');
+    if (usageSection && siteData.usage) {
+        const title = usageSection.querySelector('.section-title');
+        if (title && siteData.usage.title) {
+            title.textContent = siteData.usage.title;
+        }
+        
+        const usageText = usageSection.querySelector('.usage-text');
+        if (usageText && siteData.usage.content) {
+            usageText.innerHTML = '';
+            siteData.usage.content.forEach(paragraph => {
+                const p = document.createElement('p');
+                p.textContent = paragraph;
+                usageText.appendChild(p);
+            });
+        }
+    }
+    
 
     
     // 动态生成轮播图幻灯片
@@ -980,8 +999,8 @@ function loadCertificates() {
     // 使用products数据来生成证书展示
     if (typeof products !== 'undefined') {
         products.forEach(product => {
-            // 自动获取对应商品文件夹中的第一张图片
-            let imagePath = paths.images.products[product.folder] || paths.images.products['大果红花'];
+            // 获取对应商品的检测报告图片
+            let imagePath = paths.images.certificates[product.folder] || paths.images.certificates['大果红花'];
             
             const certificateItem = document.createElement('div');
             certificateItem.classList.add('certificate-item');

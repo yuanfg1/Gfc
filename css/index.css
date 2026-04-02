@@ -151,7 +151,7 @@ body {
 
 /* 公告栏样式 */
 .announcement {
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     padding: 20px 0;
     margin-top: 0px;
 }
@@ -242,7 +242,23 @@ body {
 /* 关于我们 */
 .about {
     padding: 60px 0;
-    background-color: #f8f9fa;
+    background-color: #ffffff;
+}
+
+.usage {
+    padding: 60px 0;
+    background-color: #ffffff;
+}
+
+.usage-text {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+    color: #666;
+}
+
+.usage-text p {
+    margin-bottom: 15px;
 }
 
 .section-title {
@@ -324,6 +340,7 @@ body {
 /* 商品展示 */
 .products {
     padding: 60px 0;
+    background-color: #ffffff;
 }
 
 .products-grid {
@@ -380,7 +397,7 @@ body {
 /* 检测报告 */
 .certificates {
     padding: 60px 0;
-    background-color: #f8f9fa;
+    background-color: #ffffff;
 }
 
 .certificates-grid {
@@ -423,6 +440,7 @@ body {
 /* 联系我们 */
 .contact {
     padding: 60px 0;
+    background-color: #ffffff;
 }
 
 .contact-content {

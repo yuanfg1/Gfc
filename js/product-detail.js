@@ -100,6 +100,17 @@ function renderProductDetail() {
         
         // 初始化商品轮播图
         initProductCarousel(productImages);
+        
+        // 加载山茶油的吃法内容
+        const usageContent = document.getElementById('usageContent');
+        if (usageContent && siteData.usage) {
+            usageContent.innerHTML = '';
+            siteData.usage.content.forEach(paragraph => {
+                const p = document.createElement('p');
+                p.textContent = paragraph;
+                usageContent.appendChild(p);
+            });
+        }
     } else {
         // 如果未找到商品，显示提示信息
         document.getElementById('productName').textContent = '商品不存在';
