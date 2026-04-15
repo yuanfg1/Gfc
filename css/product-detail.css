@@ -212,25 +212,3 @@
 .back-link:hover {
     text-decoration: underline;
 }
-
-@media (max-width: 768px) {
-    .product-detail-content {
-        padding: 20px;
-    }
-
-    .product-detail-image img {
-        height: 300px;
-    }
-
-    .product-detail-info h1 {
-        font-size: 24px;
-    }
-
-    .product-detail-info .price {
-        font-size: 24px;
-    }
-
-    .product-detail-info .actions {
-        flex-direction: column;
-    }
-}
