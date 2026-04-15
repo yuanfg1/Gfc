@@ -183,8 +183,8 @@ const siteData = {
             linkText: "了解更多"
         },
         {
-            title: "客户至上",
-            description: "以客户需求为中心，提供优质服务",
+            title: "优选果实",
+            description: "最大程度保证成品质量",
             link: "#certificates",
             linkText: "检测报告"
         },
